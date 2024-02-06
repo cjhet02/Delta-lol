@@ -1,0 +1,23 @@
+{
+  "name": "delta-lol",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cjhet02/Delta-lol.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cjhet02/Delta-lol/issues"
+  },
+  "homepage": "https://github.com/cjhet02/Delta-lol#readme",
+  "dependencies": {
+    "nvm": "^0.0.4",
+    "react-scripts": "^5.0.1"
+  }
+}
