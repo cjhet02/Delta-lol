@@ -1,0 +1,231 @@
+[
+  {
+    "champ": "Hwei",
+    "changeList": []
+  },
+  {
+    "champ": "Azir",
+    "changeList": [
+      {
+        "change": "W - Arise!",
+        "values": [
+          "Damage: 2-77 (levels 10-18) (+50/65/80/95/110) (+55% AP) ⇒ 2-77 (levels 10-18) (+50/67/84/101/118) (+55% AP)"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Braum",
+    "changeList": [
+      {
+        "change": "Base Stats",
+        "values": [
+          "Base Mana Regeneration: 6 ⇒ 7"
+        ]
+      },
+      {
+        "change": "R - Glacial Fissure",
+        "values": [
+          "Minimum Knock Up Duration: 0.3 seconds ⇒ 0.6 seconds",
+          "Secondary Target Knock Up Duration: 0.3 seconds ⇒ 0.6 seconds"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Briar",
+    "changeList": [
+      {
+        "change": "Base Stats",
+        "values": [
+          "Base Armor: 32 ⇒ 30",
+          "Attack Speed Ratio: 0.644 ⇒ 0.669 (Note: Attack speed at level 1 is unchanged.)"
+        ]
+      },
+      {
+        "change": "Q - Head Rush",
+        "values": [
+          "Damage: 60/95/130/165/200 (+80% bonus AD) ⇒ 60/90/120/150/180 (+80% bonus AD)"
+        ]
+      },
+      {
+        "change": "W - Blood Frenzy",
+        "values": [
+          "Bonus Attack Speed: 60/75/90/105/120% ⇒ 55/70/85/100/115%"
+        ]
+      },
+      {
+        "change": "E - Chilling Scream",
+        "values": [
+          "Damage Reduction: 40% ⇒ 35%",
+          "Healing: 10/11.5/13/14.5/16% of Maximum Health ⇒ 9/10/11/12/13% of Maximum Health"
+        ]
+      },
+      {
+        "change": "R - Certain Death",
+        "values": [
+          "Damage: 150/300/450 (+75% bonus AD) (+110% AP) Physical Damage ⇒ 150/300/450 (+50% bonus AD) (+120% AP) Magic Damage"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Galio",
+    "changeList": [
+      {
+        "change": "Q - Winds of War",
+        "values": [
+          "Cooldown: 12/11.5/11/10.5/10 seconds ⇒ 12/11/10/9/8 seconds"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Gragas",
+    "changeList": [
+      {
+        "change": "Passive - Happy Hour",
+        "values": [
+          "Cooldown: 12 seconds ⇒ 12/10/8/6 seconds (levels 1/6/11/16)"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Ivern",
+    "changeList": [
+      {
+        "change": "Base Stats",
+        "values": [
+          "Base Health: 655 ⇒ 630"
+        ]
+      },
+      {
+        "change": "E - Triggerseed",
+        "values": [
+          "Slow: 50/55/60/65/70% ⇒ 45/50/55/60/65%"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "K'Sante",
+    "changeList": [
+      {
+        "change": "W - Path Maker",
+        "values": [
+          "Mana Cost: 60/65/70/75/80 ⇒ 40/45/50/55/60",
+          "Damage: 20/40/60/80/100 (+50% AD) (+30% bonus armor) (+30% bonus magic resistance) (+6/7/8/9/10% target's maximum health) ⇒ 20/40/60/80/100 (+50% AD) (+50% bonus armor) (+50% bonus magic resistance) (+6/7/8/9/10% target's maximum health)"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Leona",
+    "changeList": [
+      {
+        "change": "W - Eclipse",
+        "values": [
+          "Bonus Armor: 20/25/30/35/40 (+20% bonus armor) ⇒ 20/27.5/35/42.5/50 (+20% bonus armor)",
+          "Bonus Magic Resistance: 20/25/30/35/40 (+20% bonus magic resistance) ⇒ 20/27.5/35/42.5/50 (+20% bonus magic resistance)"
+        ]
+      },
+      {
+        "change": "R - Solar Flare",
+        "values": [
+          "Damage: 100/175/250 (+80% AP) ⇒ 150/225/300 (+80% AP)"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Lucian",
+    "changeList": [
+      {
+        "change": "E - Relentless Pursuit",
+        "values": [
+          "Cooldown: 22/20/18/16/14 seconds ⇒ 19/17.75/16.5/15.25/14 seconds"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Mordekaiser",
+    "changeList": [
+      {
+        "change": "Q - Obliterate",
+        "values": [
+          "Damage: 75/95/115/135/155 (+5-139 (based on level)) (+60% AP) ⇒ 75/95/115/135/155 (+5-139 (based on level)) (+70% AP)"
+        ]
+      },
+      {
+        "change": "R - Realm of Death",
+        "values": [
+          "You Can Run…: Casting Realm of Death will now reveal the target upon starting the cast. This means that walking into a brush while Mordekaiser is casting his R will no longer cancel the spell. Note: The target will not be revealed for the entire duration of the spell, so you can still hide on bush if one comes with you to the Realm."
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Qiyana",
+    "changeList": [
+      {
+        "change": "Base Stats",
+        "values": [
+          "Base Mana: 325 ⇒ 375",
+          "Mana Growth: 50 ⇒ 60"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Talon",
+    "changeList": [
+      {
+        "change": "Q - Noxian Diplomacy",
+        "values": [
+          "Quality of Life Change: When cast at range, Q will now reset Talon's attack timer. (Note: this has been updated to match the functionality of his Q when cast at melee range.)"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Vel'Koz",
+    "changeList": [
+      {
+        "change": "W - Void Rift",
+        "values": [
+          "Fixed a bug where the first half of the rift would fizzle if Vel'Koz died directly after casting."
+        ]
+      },
+      {
+        "change": "E - Tectonic Disruption",
+        "values": [
+          "Fixed a bug where the spell would fizzle out when V'K flashes or is knocked back at max range.",
+          "Tectonic Disruption's missile will now spawn at Vel'koz's original location if he flashes or is knocked back during the cast."
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Zeri",
+    "changeList": [
+      {
+        "change": "Base Stats",
+        "values": [
+          "AD Growth: 1.3 ⇒ 2"
+        ]
+      },
+      {
+        "change": "W - Ultrashock Laser",
+        "values": [
+          "Damage: 20/60/100/140/180 (+130% AD) (+25% AP) ⇒ 30/70/110/150/190 (+130% AD) (+25% AP)"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "",
+    "changeList": []
+  }
+]

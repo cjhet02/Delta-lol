@@ -10,16 +10,16 @@
         "change": "Row 2: Flex Shard Options",
         "values": [
           "Slot 1: 9 Adaptive Force (unchanged)",
-          "newSlot 2: 6 Armor ⇒ 2% Move Speed",
-          "newSlot 3: 8 Magic Resist ⇒ 10-180 (based on level) bonus health"
+          "Slot 2: 2% Move Speed",
+          "Slot 3: 10-180 (based on level) bonus health"
         ]
       },
       {
         "change": "Row 3: Defensive Shard Options",
         "values": [
-          "newSlot 1: 15-140 (based on level) bonus health ⇒ 65 base health",
-          "newSlot 2: 6 Armor ⇒ 10% Tenacity and Slow Resist",
-          "newSlot 3: 8 Magic Resist ⇒ 10-180 (based on level) bonus health"
+          "Slot 1: 65 base health",
+          "Slot 2: 10% Tenacity and Slow Resist",
+          "Slot 3: 10-180 (based on level) bonus health"
         ]
       },
       {
@@ -29,16 +29,16 @@
     ]
   },
   {
-    "champ": "",
-    "changeList": []
-  },
-  {
-    "champ": "",
-    "changeList": []
-  },
-  {
     "champ": "Smolder",
-    "changeList": []
+    "changeList": [
+      {
+        "values": [
+          "Smolder Abilities Rundown here!: undefined",
+          "Smolder Champion Bio here!: undefined",
+          "Smolder Champion Insights here!: undefined"
+        ]
+      }
+    ]
   },
   {
     "champ": "Ahri",
@@ -46,7 +46,7 @@
       {
         "change": "E - Charm",
         "values": [
-          "Cooldown: 14 seconds ⇒ 12 seconds"
+          "Cooldown: 12 seconds"
         ]
       }
     ]
@@ -57,13 +57,13 @@
       {
         "change": "Base Stats",
         "values": [
-          "Base Armor: 40 ⇒ 37"
+          "Base Armor: 37"
         ]
       },
       {
         "change": "E - Power Fist",
         "values": [
-          "Damage: 200% Total AD (+25% AP) ⇒ 180% Total AD (+25% AP)"
+          "Damage: 180% Total AD (+25% AP)"
         ]
       }
     ]
@@ -74,22 +74,22 @@
       {
         "change": "Passive - Crimson Curse",
         "values": [
-          "Healing Amplification: 0.5% per 1% missing health ⇒ 0.4% (+0.025% per 100 bonus health) per 1% missing health",
-          "Bleed Tick Rate: 1 second ⇒ 0.5 seconds (Note: Total bleed damage and duration are unchanged.)"
+          "Healing Amplification: 0.4% (+0.025% per 100 bonus health) per 1% missing health",
+          "Bleed Tick Rate: 0.5 seconds (Note: Total bleed damage and duration are unchanged.)"
         ]
       },
       {
         "change": "Q - Head Rush",
         "values": [
-          "Damage: 60/90/120/150/180 (+80% bonus AD) physical damage ⇒ 60/90/120/150/180 (+80% bonus AD) (+60% AP) magic damage",
-          "Defensive Reductions: 10/12.5/15/17.5/20% armor reduction ⇒ 10/12.5/15/17.5/20% armor and magic resistance reduction",
-          "newHealthy Hits: Q now applies on-hit effects and lifesteal"
+          "Damage: 60/90/120/150/180 (+80% bonus AD) (+60% AP) magic damage",
+          "Defensive Reductions: 10/12.5/15/17.5/20% armor and magic resistance reduction",
+          "Healthy Hits: Q now applies on-hit effects and lifesteal"
         ]
       },
       {
         "change": "W - Blood Frenzy",
         "values": [
-          "Bite Heal: 36/42/48/54/60% of damage dealt ⇒ 25/30/35/40/45% of damage dealt (+5% of Briar’s maximum health)",
+          "Bite Heal: 25/30/35/40/45% of damage dealt (+5% of Briar’s maximum health)",
           "removedLess Critical Strikes: W no longer critically strikes for 5-65(+5% AD) bonus damage. (Note: W can still critically strike like a basic attack for 100% total AD.)"
         ]
       }
@@ -101,19 +101,19 @@
       {
         "change": "Base Stats",
         "values": [
-          "Base Health: 646 ⇒ 670"
+          "Base Health: 670"
         ]
       },
       {
         "change": "Passive - Adaptive Defenses",
         "values": [
-          "Cooldown: 20/15/10 seconds (levels 1/7/13) ⇒ 18/14/10 seconds (levels 1/7/13)"
+          "Cooldown: 18/14/10 seconds (levels 1/7/13)"
         ]
       },
       {
         "change": "Q - Precision Protocol",
         "values": [
-          "Bonus Movement Speed: 20/25/30/35/40% ⇒ 30/32.5/35/37.5/40%"
+          "Bonus Movement Speed: 30/32.5/35/37.5/40%"
         ]
       }
     ]
@@ -124,14 +124,14 @@
       {
         "change": "Q - Decimate",
         "values": [
-          "Mana Cost: 30/35/40/45/50 mana ⇒ 25/30/35/40/45 mana",
-          "Healing based on Missing Health per Target: 13% per target (up to a maximum of 39%) ⇒ 15% per target (up to a maximum of 45%)"
+          "Mana Cost: 25/30/35/40/45 mana",
+          "Healing based on Missing Health per Target: 15% per target (up to a maximum of 45%)"
         ]
       },
       {
         "change": "E - Apprehend",
         "values": [
-          "Passive Armor Penetration: 15/20/25/30/35% ⇒ 20/25/30/35/40%"
+          "Passive Armor Penetration: 20/25/30/35/40%"
         ]
       }
     ]
@@ -142,19 +142,19 @@
       {
         "change": "Q - Mystic Shot",
         "values": [
-          "Damage: 20/45/70/95/120 (+130% AD) (+15% AP) ⇒ 20/45/70/95/120 (+135% AD) (+15% AP)"
+          "Damage: 20/45/70/95/120 (+135% AD) (+15% AP)"
         ]
       },
       {
         "change": "W - Essence Flux",
         "values": [
-          "Damage: 80/135/190/245/300 (+60% bonus AD) (+70/75/80/85/90% AP) ⇒ 80/135/190/245/300 (+100% bonus AD) (+70/75/80/85/90% AP)"
+          "Damage: 80/135/190/245/300 (+100% bonus AD) (+70/75/80/85/90% AP)"
         ]
       },
       {
         "change": "R - Trueshot Barrage",
         "values": [
-          "Damage: 350/500/650 (+100% bonus AD) (+90% AP) ⇒ 350/525/700 (+120% bonus AD) (+90% AP)"
+          "Damage: 350/525/700 (+120% bonus AD) (+90% AP)"
         ]
       }
     ]
@@ -165,13 +165,13 @@
       {
         "change": "Q - Urchin Strike",
         "values": [
-          "Magic Damage: 10/25/40/55/70 (+50% AP) ⇒ 10/25/40/55/70 (+45% AP) (Note: 100% AD physical damage and on-hit effectiveness unchanged.)"
+          "Magic Damage: 10/25/40/55/70 (+45% AP) (Note: 100% AD physical damage and on-hit effectiveness unchanged.)"
         ]
       },
       {
         "change": "W - Seastone Trident",
         "values": [
-          "Total Magic Damage Over Time: 20/30/40/50/60 (+40% AP) ⇒ 20/30/40/50/60 (+30% AP)"
+          "Total Magic Damage Over Time: 20/30/40/50/60 (+30% AP)"
         ]
       }
     ]
@@ -182,13 +182,13 @@
       {
         "change": "W - Courage",
         "values": [
-          "30% Damage Reduction Duration: 2/2.75/3.5/4.25/5 ⇒ 4 seconds at all ranks"
+          "30% Damage Reduction Duration: 4 seconds at all ranks"
         ]
       },
       {
         "change": "E - Judgment",
         "values": [
-          "Damage per Spin: 4/8/12/16/20 (+0-8.2 (based on level)) (+32/34/36/38/40% AD) ⇒ 4/8/12/16/20 (+0-8.2 (based on level)) (+36/37/38/39/40% AD)"
+          "Damage per Spin: 4/8/12/16/20 (+0-8.2 (based on level)) (+36/37/38/39/40% AD)"
         ]
       }
     ]
@@ -199,14 +199,14 @@
       {
         "change": "Base Stats",
         "values": [
-          "Armor Growth: 4.8 ⇒ 5",
-          "Health Growth: 109 ⇒ 115"
+          "Armor Growth: 5",
+          "Health Growth: 115"
         ]
       },
       {
         "change": "R - Explosive Cask",
         "values": [
-          "Cooldown: 120/100/80 seconds ⇒ 100/85/70 seconds"
+          "Cooldown: 100/85/70 seconds"
         ]
       }
     ]
@@ -217,7 +217,7 @@
       {
         "change": "Passive - A Thousand Cuts",
         "values": [
-          "Damage: 1% (+0.65% per 100 AP) of the target's maximum health ⇒ 1% (+0.72% per 100 AP) of the target's maximum health"
+          "Damage: 1% (+0.72% per 100 AP) of the target's maximum health"
         ]
       }
     ]
@@ -228,13 +228,13 @@
       {
         "change": "E - Subject: Torment",
         "values": [
-          "Cooldown: 15/14/13/12/11 seconds ⇒ 12/11.5/11/10.5/10 seconds"
+          "Cooldown: 12/11.5/11/10.5/10 seconds"
         ]
       },
       {
         "change": "EQ - Grim Visage",
         "values": [
-          "Flee Duration: 1 second at all ranks ⇒ 1/1.125/1.25/1.375/1.5 seconds"
+          "Flee Duration: 1/1.125/1.25/1.375/1.5 seconds"
         ]
       }
     ]
@@ -245,15 +245,15 @@
       {
         "change": "Base Stats",
         "values": [
-          "Base Mana: 300 ⇒ 350",
-          "Mana Growth: 50 ⇒ 60",
-          "Health Growth: 109 ⇒ 115"
+          "Base Mana: 350",
+          "Mana Growth: 60",
+          "Health Growth: 115"
         ]
       },
       {
         "change": "Passive - Prophet of an Elder God",
         "values": [
-          "Missing Health Heal upon Tentacle Hit: 4.5% of missing health ⇒ 5% of missing health"
+          "Missing Health Heal upon Tentacle Hit: 5% of missing health"
         ]
       }
     ]
@@ -264,7 +264,7 @@
       {
         "change": "E - Counter Strike",
         "values": [
-          "Minimum Damage: 55/85/115/145/175 (+70% AP) (+4% of target's maximum health) ⇒ 40/70/100/130/160 (+70% AP) (+3.5% of target's maximum health) (Note: Maximum damage values are still 2x the minimum damage values.)"
+          "Minimum Damage: 40/70/100/130/160 (+70% AP) (+3.5% of target's maximum health) (Note: Maximum damage values are still 2x the minimum damage values.)"
         ]
       }
     ]
@@ -275,19 +275,19 @@
       {
         "change": "Base Stats",
         "values": [
-          "Base Health: 604 ⇒ 630"
+          "Base Health: 630"
         ]
       },
       {
         "change": "Q - Inner Flame",
         "values": [
-          "Damage: 70/120/170/220/270 (+50% AP) ⇒ 70/120/170/220/270 (+70% AP)"
+          "Damage: 70/120/170/220/270 (+70% AP)"
         ]
       },
       {
         "change": "E - Inspire",
         "values": [
-          "Shield Strength: 80/120/160/200/240 (+45% AP) ⇒ 80/125/170/215/260 (+60% AP)"
+          "Shield Strength: 80/125/170/215/260 (+60% AP)"
         ]
       }
     ]
@@ -298,13 +298,13 @@
       {
         "change": "Q - Lay Waste",
         "values": [
-          "Damage: 43/61/79/97/115 (+35% AP) ⇒ 45/65/85/105/125 (+35% AP)"
+          "Damage: 45/65/85/105/125 (+35% AP)"
         ]
       },
       {
         "change": "W - Wall of Pain",
         "values": [
-          "Magic Resist Reduction: 15% ⇒ 25%"
+          "Magic Resist Reduction: 25%"
         ]
       }
     ]
@@ -315,13 +315,13 @@
       {
         "change": "Q - Flamespitter",
         "values": [
-          "Damage: 135/150/165/180/195 (+110% AP) (+6/7/8/9/10% of target's maximum health) ⇒ 125/140/155/170/185 (+110% AP) (+6/7/8/9/10% of target's maximum health)"
+          "Damage: 125/140/155/170/185 (+110% AP) (+6/7/8/9/10% of target's maximum health)"
         ]
       },
       {
         "change": "E - Electro Harpoon",
         "values": [
-          "Magic Resist Reduction: 12/14/16/18/20% ⇒ 10/12/14/16/18%"
+          "Magic Resist Reduction: 10/12/14/16/18%"
         ]
       }
     ]
@@ -332,7 +332,7 @@
       {
         "change": "Base Stats",
         "values": [
-          "Base Attack Damage: 60 ⇒ 64"
+          "Base Attack Damage: 64"
         ]
       }
     ]
@@ -343,13 +343,13 @@
       {
         "change": "E - Toxic Shot",
         "values": [
-          "Magic Damage On-Hit: 14/25/36/47/58 (+30% AP) ⇒ 14/25/36/47/58 (+25% AP)"
+          "Magic Damage On-Hit: 14/25/36/47/58 (+25% AP)"
         ]
       },
       {
         "change": "R - Noxious Trap",
         "values": [
-          "Charge Charge Time: 30/25/20 seconds ⇒ 35/30/25 seconds"
+          "Charge Charge Time: 35/30/25 seconds"
         ]
       }
     ]
@@ -360,28 +360,28 @@
       {
         "change": "Base Stats",
         "values": [
-          "Base Attack Speed: 0.651 ⇒ 0.625 (Note: Attack Speed ratio unchanged.)",
-          "Attack Speed Growth: 3.22% ⇒ 3%"
+          "Base Attack Speed: 0.625 (Note: Attack Speed ratio unchanged.)",
+          "Attack Speed Growth: 3%"
         ]
       },
       {
         "change": "Passive - Loaded Dice",
         "values": [
-          "newNat 20: Critical strikes now roll an additional 6 sided die that is weighted towards 1 rather than 6."
+          "Nat 20: Critical strikes now roll an additional 6 sided die that is weighted towards 1 rather than 6."
         ]
       },
       {
         "change": "Q - Wild Cards",
         "values": [
-          "Damage: 60/100/140/180/220 (+90% AP) ⇒ 60/100/140/180/220 (+90% AP) (+50% bonus AD)"
+          "Damage: 60/100/140/180/220 (+90% AP) (+50% bonus AD)"
         ]
       },
       {
         "change": "W - Pick A Card",
         "values": [
-          "newBlue Crits: 0.575 critical strike multiplier added (increases damage by up to 57.5% based on critical strike chance)",
-          "newRed Crits: 0.350 critical strike multiplier added (increases damage by up to 35% based on critical strike chance)",
-          "newGold Crits: 0.250 critical strike multiplier added (increases damage by up to 25% based on critical strike chance)",
+          "Blue Crits: 0.575 critical strike multiplier added (increases damage by up to 57.5% based on critical strike chance)",
+          "Red Crits: 0.350 critical strike multiplier added (increases damage by up to 35% based on critical strike chance)",
+          "Gold Crits: 0.250 critical strike multiplier added (increases damage by up to 25% based on critical strike chance)",
           "QoL Adjustment: Locking in a card now resets Twisted Fate’s auto attack timer",
           "QoL Adjustment: Pick a Card now affects Inhibitors and the Nexus"
         ]
@@ -389,8 +389,8 @@
       {
         "change": "E - Stacked Deck",
         "values": [
-          "Bonus Attack Speed: 10/17.5/25/32.5/40% ⇒ 10/22.5/35/47.5/60%",
-          "Damage: 65/90/115/140/165 (+50% AP) ⇒ 65/90/115/140/165 (+50% AP) (+75% bonus AD)",
+          "Bonus Attack Speed: 10/22.5/35/47.5/60%",
+          "Damage: 65/90/115/140/165 (+50% AP) (+75% bonus AD)",
           "QoL Adjustment: Stacked Deck now affects towers at 50% effectiveness",
           "QoL Adjustment: TF’s deck now becomes fully stacked on spawn"
         ]
@@ -403,57 +403,114 @@
       {
         "change": "Base Stats",
         "values": [
-          "Base Health: 550 ⇒ 580"
+          "Base Health: 580"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Bloodsong",
+    "changeList": [
+      {
+        "values": [
+          "Expose Weakness Increased Damage: 10% (melee) / 6% (ranged)"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Experimental Hexplate",
+    "changeList": [
+      {
+        "values": [
+          "Item Recipe: Hearthbound Axe + Tunneler + 700 gold",
+          "Attack Speed: 25%",
+          "Passive - Overdrive: 30% bonus Attack Speed"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Frozen Heart",
+    "changeList": [
+      {
+        "values": [
+          "Total Cost: 2400"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Horizon Focus",
+    "changeList": [
+      {
+        "values": [
+          "Passive - Hypershot and Focus Range Requirement: 600",
+          "Passive - Focus AoE Reveal Radius: 1400 units"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Phantom Dancer",
+    "changeList": [
+      {
+        "values": [
+          "Item Recipe: Zeal + Rectrix + 800 gold"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Riftmaker",
+    "changeList": [
+      {
+        "values": [
+          "Total Cost: 3100"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Steel Sigil",
+    "changeList": [
+      {
+        "values": [
+          "Total Cost: 1100 (Note: Due to the gold decrease to Steel Sigil, the combine costs for items building out of of it such as Death’s Dance and Guardian Angel have had their combine costs increased by 100, but total cost is unchanged.)"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Stormsurge",
+    "changeList": [
+      {
+        "values": [
+          "Ability Power: 90",
+          "Passive - Squall Damage: 100-200 (+20% AP) (melee) / 75-150 (+15% AP) (ranged)"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Stridebreaker",
+    "changeList": [
+      {
+        "values": [
+          "Attack Speed: 30%",
+          "Total Cost: 3000"
         ]
       }
     ]
   },
   {
     "champ": "",
-    "changeList": []
-  },
-  {
-    "champ": "Bloodsong",
-    "changeList": []
-  },
-  {
-    "champ": "Experimental Hexplate",
-    "changeList": []
-  },
-  {
-    "champ": "Frozen Heart",
-    "changeList": []
-  },
-  {
-    "champ": "Horizon Focus",
-    "changeList": []
-  },
-  {
-    "champ": "Phantom Dancer",
-    "changeList": []
-  },
-  {
-    "champ": "Riftmaker",
-    "changeList": []
-  },
-  {
-    "champ": "Steel Sigil",
-    "changeList": []
-  },
-  {
-    "champ": "Stormsurge",
-    "changeList": []
-  },
-  {
-    "champ": "Stridebreaker",
-    "changeList": []
-  },
-  {
-    "champ": "",
-    "changeList": []
-  },
-  {
-    "champ": "",
-    "changeList": []
+    "changeList": [
+      {
+        "values": [
+          "One At A Time: undefined"
+        ]
+      }
+    ]
   }
 ]

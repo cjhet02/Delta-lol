@@ -1,0 +1,702 @@
+[
+  {
+    "champ": "Aurelion Sol",
+    "changeList": [
+      {
+        "change": "Q - Breath of Light",
+        "values": [
+          "Mana Cost per Second: 30/35/40/45/50",
+          "Stardust Stacks per Champion Burst: 3"
+        ]
+      },
+      {
+        "change": "W - Astral Flight",
+        "values": [
+          "Mana Cost: 50/55/60/65/70",
+          "Cooldown: 15/14/13/12/11 seconds",
+          "Q - Breath of Light Bonus Damage: 18/20/22/24/26%"
+        ]
+      },
+      {
+        "change": "E - Singularity",
+        "values": [
+          "Stardust Stacks per Champion Takedown: 2",
+          "Stardust Stacks per Epic Monster Takedown: 2",
+          "Stardust Stacks per Cannon Minion Takedown: 2",
+          "Stardust Stacks per Large Monster Takedown: 2"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Azir",
+    "changeList": [
+      {
+        "change": "Base Stats",
+        "values": [
+          "Base Health Regeneration: 5"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Brand",
+    "changeList": [
+      {
+        "change": "Passive - Blaze",
+        "values": [
+          "Damage to Monsters Modifier: 200%",
+          "Bugfix: Blaze no longer deals more than 2% maximum health damage over a single application."
+        ]
+      },
+      {
+        "change": "Q - Sear",
+        "values": [
+          "Damage: 70/100/130/160/190 (+65% AP)"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Corki",
+    "changeList": [
+      {
+        "change": "Passive - Special Delivery",
+        "values": [
+          "Package Duration: 45 seconds"
+        ]
+      },
+      {
+        "change": "W - Valkyrie",
+        "values": [
+          "Cooldown: 20/18/16/14/12 seconds",
+          "Mana Cost: 80",
+          "Damage per Second: 60/90/120/150/180 (+60% AP)"
+        ]
+      },
+      {
+        "change": "R - Missile Barrage",
+        "values": [
+          "removedItem Interaction Adjustment: Malignance will no longer count toward Eclipse’s passive."
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Ezreal",
+    "changeList": [
+      {
+        "change": "Q - Mystic Shot",
+        "values": [
+          "Damage: 20/45/70/95/120 (+130% AD) (+15% AP)"
+        ]
+      },
+      {
+        "change": "R - Trueshot Barrage",
+        "values": [
+          "Damage: 325/500/675 (+100% bonus AD) (+90% AP)"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Illaoi",
+    "changeList": [
+      {
+        "change": "Passive - Prophet of the Elder God",
+        "values": [
+          "Tentacle Range: 925",
+          "Tentacle Damage: 9-162 (based on level) (+115% AD) (+40% AP)"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Karma",
+    "changeList": [
+      {
+        "change": "R - Mantra",
+        "values": [
+          "Soulflare Damage: 40/130/220/310 (+50% AP)"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Lillia",
+    "changeList": [
+      {
+        "change": "Passive - Dream-Laden Bough",
+        "values": [
+          "Maximum Health Damage: 5% (+1.25% AP)"
+        ]
+      },
+      {
+        "change": "Q - Blooming Blows",
+        "values": [
+          "Damage: 70/90/110/130/150 (+70% AP)"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Maokai",
+    "changeList": [
+      {
+        "change": "Base Stats",
+        "values": [
+          "Base Mana Regeneration: 6"
+        ]
+      },
+      {
+        "change": "Passive - Sap Magic",
+        "values": [
+          "Maximum Health Heal: 4-12.8% (based on level)"
+        ]
+      },
+      {
+        "change": "Q - Bramble Smash",
+        "values": [
+          "Cooldown: 7/6.5/6/5.5/5 seconds",
+          "Mana Cost: 40"
+        ]
+      },
+      {
+        "change": "E - Sapling Toss",
+        "values": [
+          "Cooldown: 16/15/14/13/12 seconds",
+          "Mana Cost: 60/65/70/75/80"
+        ]
+      },
+      {
+        "change": "R - Nature’s Grasp",
+        "values": [
+          "Cooldown: 130/110/90 seconds"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Nidalee",
+    "changeList": [
+      {
+        "change": "Base Stats",
+        "values": [
+          "Magic Resistance Growth: 1.45"
+        ]
+      },
+      {
+        "change": "E - Primal Surge",
+        "values": [
+          "Minimum Heal: 50/75/100/125/150 (+35% AP) (Note: maximum heal is still double the minimum)",
+          "Bonus Attack Speed: 30/40/50/60/70%"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Pyke",
+    "changeList": [
+      {
+        "change": "Base Stats",
+        "values": [
+          "Base Armor: 47"
+        ]
+      },
+      {
+        "change": "Q - Bone Skewer",
+        "values": [
+          "Damage: 100/150/200/250/300 (+75% bonus AD)",
+          "Mana Cost: 70/75/80/85/90"
+        ]
+      },
+      {
+        "change": "W - Ghostwater Dive",
+        "values": [
+          "Bonus Movement Speed: 45% (+2% per 1 Lethality)"
+        ]
+      },
+      {
+        "change": "E - Phantom Undertow",
+        "values": [
+          "Damage: 100/150/200/250/300 (+100% bonus AD)"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Rengar",
+    "changeList": [
+      {
+        "change": "Base Stats",
+        "values": [
+          "Base Health: 590"
+        ]
+      },
+      {
+        "change": "Q - Savagery",
+        "values": [
+          "Bonus Damage: 30/60/90/120/150 (+0/3.75/7.5/11.25/15% AD)",
+          "Empowered Bonus Damage: 30-235 (based on level) (+30% AD)"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Shaco",
+    "changeList": [
+      {
+        "change": "Base Stats",
+        "values": [
+          "Mana Regeneration Growth: 0.35"
+        ]
+      },
+      {
+        "change": "W - Jack In The Box",
+        "values": [
+          "Mana Cost: 70/65/60/55/50",
+          "Bonus Damage to Monsters: 20/35/50/65/80",
+          "Grub Proof: Shaco’s Jack in the Boxes are no longer one-shot by Grubs."
+        ]
+      },
+      {
+        "change": "E - Two-Shiv Poison",
+        "values": [
+          "Mana Cost: 75"
+        ]
+      },
+      {
+        "change": "R - Hallucinate",
+        "values": [
+          "POOF: Shaco’s clone now creates an orange poof when it snaps back to Shaco or teleports for any reason.",
+          "Clone Clock: Shaco’s clone duration is now displayed on the HUD.",
+          "Bugfix: Shaco’s clone no longer loses its auto attack target when casting spells."
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Shyvana",
+    "changeList": [
+      {
+        "change": "Q - Twin Bite",
+        "values": [
+          "Empowered Attack Bonus Damage: 100% AD (+50% AP)",
+          "Bonus Attack Speed: 50/55/60/65/70%"
+        ]
+      },
+      {
+        "change": "W - Burnout",
+        "values": [
+          "Bonus Movement Speed: 30/35/40/45/50% (+0.12% AP)"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Taliyah",
+    "changeList": [
+      {
+        "change": "Q - Threaded Volley",
+        "values": [
+          "Damage: 60/78/96/114/132 (+50% AP)"
+        ]
+      },
+      {
+        "change": "E - Unraveled Earth",
+        "values": [
+          "Cooldown: 14 seconds at all ranks"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Teemo",
+    "changeList": [
+      {
+        "change": "Q - Blinding Dart",
+        "values": [
+          "QoL Adjustment: Teemo Q blind should now immediately apply to targets hit by the Q, preventing Teemo from taking damage from an auto attack after the blind has been applied. Blind duration should now also be consistent with the debuff duration above the target’s health bar."
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Trundle",
+    "changeList": [
+      {
+        "change": "Base Stats",
+        "values": [
+          "Base Health: 650"
+        ]
+      },
+      {
+        "change": "Q - Chomp",
+        "values": [
+          "Bonus Attack Damage: 10/30/50/70/90 (+15/25/35/45/55% AD)"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Twitch",
+    "changeList": [
+      {
+        "change": "E - Contaminate",
+        "values": [
+          "QoL Adjustment: If Twitch uses his E at the same time his poison expires on an enemy, they will now take damage based on the number of stacks they had when the poison expired. This should result in the E cast being just slightly more forgiving."
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Wukong",
+    "changeList": [
+      {
+        "change": "Q - Crushing Blow",
+        "values": [
+          "Bonus Range: 135/145/155/165/175",
+          "Bonus Physical Damage: 20/45/70/95/120 (+55% bonus AD)"
+        ]
+      },
+      {
+        "change": "E - Nimbus Strike",
+        "values": [
+          "Cooldown: 10/9.25/8.5/7.75/7 seconds"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Yorick",
+    "changeList": [
+      {
+        "change": "Passive - Shepherd of Souls",
+        "values": [
+          "Summon Leash Range: 1600",
+          "Return Speed: Yorick’s summons now gain bonus movement speed when returning to Yorick. This movement speed bonus is based on the distance between Yorick and the summon."
+        ]
+      },
+      {
+        "change": "Q - Last Rites",
+        "values": [
+          "Heal: 10-68 (based on level) (+4/5/6/7/8% missing health), halved vs non-champions",
+          "Mana Cost: 20"
+        ]
+      },
+      {
+        "change": "E - Mourning Mist",
+        "values": [
+          "Cast Time: 0.25 seconds"
+        ]
+      },
+      {
+        "change": "R - Eulogy of the Isles",
+        "values": [
+          "Bonus Damage when Attacking Maiden’s Target: 2/2.5/3% maximum health (capped at 100 vs monsters), no cooldown"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Zeri",
+    "changeList": [
+      {
+        "change": "Base Stats",
+        "values": [
+          "Base AD: 56"
+        ]
+      },
+      {
+        "change": "R - Lightning Crash",
+        "values": [
+          "Cooldown: 80/75/70"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Ziggs",
+    "changeList": [
+      {
+        "change": "Base Stats",
+        "values": [
+          "Base Armor: 21",
+          "Armor Growth: 4.7"
+        ]
+      },
+      {
+        "change": "W - Satchel Charge",
+        "values": [
+          "Cooldown: 20/18/16/14/12 seconds"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Zyra",
+    "changeList": [
+      {
+        "change": "Base Stats",
+        "values": [
+          "Base Mana Regeneration: 7",
+          "Mana Regeneration Growth: 0.8"
+        ]
+      },
+      {
+        "change": "Q - Deadly Spines",
+        "values": [
+          "Mana Cost: 55"
+        ]
+      },
+      {
+        "change": "W - Rampart Growth",
+        "values": [
+          "Seed Charge Progression on Minion/Monster Takedown: 35%"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Essence Reaver",
+    "changeList": [
+      {
+        "values": [
+          "Attack Damage: 60"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Guinsoo’s Rageblade",
+    "changeList": [
+      {
+        "values": [
+          "Item Recipe: Amplifying Tome + Recurve Bow + Pickaxe + 1025 gold",
+          "Attack Damage: 35",
+          "Ability Power: 35"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Hullbreaker",
+    "changeList": [
+      {
+        "values": [
+          "Big Bugfix: undefined"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Kaenic Rookern",
+    "changeList": [
+      {
+        "values": [
+          "Magic Shield Strength: 18% of maximum health",
+          "Shield Refresh Cooldown: 15 seconds without taking damage"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Rod of Ages",
+    "changeList": [
+      {
+        "values": [
+          "Health: 400",
+          "Mana: 400"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "The Collector",
+    "changeList": [
+      {
+        "values": [
+          "Attack Damage: 55"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Youmuu’s Ghostblade",
+    "changeList": [
+      {
+        "values": [
+          "Out of Combat Bonus Movement Speed: 40 (melee) / 20 (ranged)",
+          "Active Bonus Movement Speed: 20% (melee) / 15% (ranged)"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Archangel's Staff / Seraph's Embrace",
+    "changeList": [
+      {
+        "values": [
+          "Total Cost: 2900",
+          "Combine Cost: 400"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Echoes of Helia",
+    "changeList": [
+      {
+        "values": [
+          "Damage per Shard: 45",
+          "Heal per Shard: 40"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Hextech Alternator",
+    "changeList": [
+      {
+        "values": [
+          "Revved Damage: 65 at all levels"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Hextech Rocketbelt",
+    "changeList": [
+      {
+        "values": [
+          "Supersonic Damage: 100 (+10% AP)"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Kraken Slayer",
+    "changeList": [
+      {
+        "values": [
+          "Bring It Down Damage: 140-310 (levels 8-18)"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Lich Bane",
+    "changeList": [
+      {
+        "values": [
+          "Spellblade Damage: 75% base AD (+50% AP)"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Luden’s Companion",
+    "changeList": [
+      {
+        "values": [
+          "Total Cost: 2900",
+          "Combine Cost: 600",
+          "Ability Power: 95",
+          "Fire Damage: 45 (+4% AP)"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Malignance",
+    "changeList": [
+      {
+        "values": [
+          "Total Cost: 2700",
+          "Combine Cost: 600",
+          "Damage per Second: 60 (+5% AP)",
+          "Magic Resist Shred: 10 at all levels"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Profane Hydra",
+    "changeList": [
+      {
+        "values": [
+          "Passive Cleave Damage: 50% AD (melee) / 25% AD (ranged)",
+          "Active Heretical Cleave Damage Against Targets Below 50% Maximum Health: 130% total AD"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Statikk Shiv",
+    "changeList": [
+      {
+        "values": [
+          "Total Cost: 2700",
+          "Combine Cost: 100",
+          "Electroshock Damage to Champions: 90 at all levels"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Stormrazor",
+    "changeList": [
+      {
+        "values": [
+          "Bolt Damage: 100",
+          "Bolt Bonus Movement Speed: 1.5 seconds"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Stormsurge",
+    "changeList": [
+      {
+        "values": [
+          "Ability Power: 95",
+          "Squall Damage: 140 (+20% AP)"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Sundered Sky",
+    "changeList": [
+      {
+        "values": [
+          "Attack Damage: 45",
+          "Health: 450"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Titanic Hydra",
+    "changeList": [
+      {
+        "values": [
+          "Health: 550",
+          "Active Titanic Crescent Damage to Primary Target: 4% maximum health (melee) / 2% maximum health (ranged)"
+        ]
+      }
+    ]
+  },
+  {
+    "champ": "Rift Herald",
+    "changeList": [
+      {
+        "values": [
+          "Slow Start: undefined",
+          "Damage from Wall Collision: Crashing into a wall while controlling Herald will deal 20% of the damage received compared to crashing into a tower to Shelly",
+          "We Don’t Have All Game…: undefined"
+        ]
+      }
+    ]
+  }
+]
