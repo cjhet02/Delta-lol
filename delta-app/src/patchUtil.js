@@ -9,32 +9,47 @@ const fs = require('fs');
 //     delta = []
 // }
 
-function toNum(text) {
-    const arr = text.split(": ");
-    
-    if(!text.search(/^new[^\s]/)){
-        text = 'New: ' + text.slice(3);
-        //add to new array
-        //add 'new' to old array
-    } else if(!text.search(/^removed[^\s]/)){
-        text = 'Removed: ' + text.slice(7);
-        //add to old array
-        //add 'removed' to new array
-    }
+async function toNum(text) { //take a string and parse out numerical values/calculate deltas
+    // console.log(text);
+    text = text.split('(Note:')[0]; //remove any notes, as numbers will match regex
+    const [ feature, changes ] = text.split(': ');
+    console.log(typeof (changes), text);
 
-    if(text.indexOf('⇒') == -1) { //no arrow for changes
-        //assume new:
-        //add to new array
-        //add 'new' to old array
-    } else {
-        if(arr[0] == null) {
-            return text.split(" ⇒ ")[1];
-        } else {
-            if(!arr[0].search(/^new[^\s]/)){ //clean up "new" tag
-                console.log(`${arr[0]} -> ${arr[0].slice(3)}`);
-                arr[0] = arr[0].slice(3);
-            }
-            return arr[0] + ': ' + text.split(" ⇒ ")[1];
+    //sometimes the "new" tag will be placed in front of a change, the and accounts for this
+    if(changes.search(/^new[^\s]/) && changes.indexOf('⇒') == -1){
+        return {
+            feature,
+            before: ['new'],
+            after: changes.slice(3),
+            delta: ['new'],
+        }
+    } else if(changes.search(/^removed[^\s]/)){
+        return {
+            feature,
+            before: changes.slice(7),
+            after: ['removed'],
+            delta: ['removed'],
+        }
+    } else { //there has been a change
+        const diff = changes.split(" ⇒ ");
+        console.log(diff);
+
+        diff[0].match(/-?\d+(\.\d+)?/g)//find old values
+        diff[1].match(/-?\d+(\.\d+)?/g)//find new values
+
+        //lets assume they place new values at the end
+        for (let i = 0; i < diff[1].length; i++) {
+            if (!diff[0][i])
+                delta.push('new');
+            else
+                delta.push(parseFloat(diff[1][i] - parseFloat(diff[0][i])));
+        }
+
+        return {
+            feature,
+            before: diff[0],
+            after: diff[1],
+            delta,
         }
     }
 }
@@ -53,29 +68,10 @@ async function getPatch(patch) {
         const champ = $(elem).find('h3.change-title').text();
 
         changes.each((index, elem) => {
-            const values = $(elem).next().children().toArray().map(function(x) {
+            const values = $(elem).next().children().toArray().map(async function(x) {
                 let text = $(x).text();
-                if(!text.search(/^new[^\s]/)){ //clean up "new" tag
-                    text = text.slice(3);
-                } else if(!text.search(/^removed[^\s]/)){ //clean up "new" tag
-                    text = text.slice(7);
-                }
 
-                console.log(text);
-                if(text.indexOf('⇒') == -1) {
-                    return text;
-                } else {
-                    const arr = text.split(": ");
-                    if(arr[0] == null) {
-                        return text.split(" ⇒ ")[1];
-                    } else {
-                        if(!arr[0].search(/^new[^\s]/)){ //clean up "new" tag
-                            console.log(`${arr[0]} -> ${arr[0].slice(3)}`);
-                            arr[0] = arr[0].slice(3);
-                        }
-                        return arr[0] + ': ' + text.split(" ⇒ ")[1];
-                    }
-                }
+                return await toNum(text);
             });
 
             changeList.push({ change: $(elem).text(), values })
@@ -84,17 +80,9 @@ async function getPatch(patch) {
         if (changeList.length == 0) { //the change is likely for an item, change selects
             changes = $(elem).find('ul');
             changes.each((index, elem) => {
-                const values = $(elem).children().toArray().map(function(x) {
+                const values = $(elem).children().toArray().map(async function(x) {
                     let text = $(x).text();
-                    if(!text.search(/^new[^\s]/)){ //clean up "new" tag
-                        text = text.slice(3);
-                    }
-                    const arr = text.split(": ");
-                    if(arr[0] == null) {
-                        return text.split(" ⇒ ")[1];
-                    } else {
-                        return arr[0] + ': ' + text.split(" ⇒ ")[1];
-                    }
+                    return await toNum(text);
                 });
 
                 changeList.push({ values })
@@ -119,6 +107,6 @@ async function getPatch(patch) {
 
 const patch = "14-2";
 getPatch(patch).then(result => {
-    console.log(result);
+    // console.log(result);
     fs.writeFile(`${patch}.json`, JSON.stringify(result, null, 2), 'utf8', () => { });
 }).catch(err => console.log(err));
