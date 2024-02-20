@@ -1,6 +1,5 @@
 const axios = require('axios');
-const cheerio = require('cheerio');
-const fs = require('fs');
+const cheerio = require('cheerio');const fs = require('fs');
 
 // {
 //     feature = ''
@@ -10,47 +9,63 @@ const fs = require('fs');
 // }
 
 async function toNum(text) { //take a string and parse out numerical values/calculate deltas
-    // console.log(text);
     text = text.split('(Note:')[0]; //remove any notes, as numbers will match regex
-    const [ feature, changes ] = text.split(': ');
-    console.log(typeof (changes), text);
+    let [ feature, changes ] = text.split(': ');
+    if(!changes) {
+        return null;
+    }
+    if(feature.search(/^new[^\s]/) != -1){
+        feature = feature.slice(3);
 
-    //sometimes the "new" tag will be placed in front of a change, the and accounts for this
-    if(changes.search(/^new[^\s]/) && changes.indexOf('⇒') == -1){
-        return {
-            feature,
-            before: ['new'],
-            after: changes.slice(3),
-            delta: ['new'],
+        //sometimes the "new" tag will be placed in front of a change, the and accounts for this
+        if(changes.indexOf('⇒') == -1) {
+            return {
+                feature,
+                before: ['new'],    
+                after: changes,
+                delta: ['new'],
+            }
         }
-    } else if(changes.search(/^removed[^\s]/)){
+    } else if(feature.search(/^removed[^\s]/) != -1){
         return {
-            feature,
-            before: changes.slice(7),
+            feature: feature.slice(7),
+            before: changes,
             after: ['removed'],
             delta: ['removed'],
         }
-    } else { //there has been a change
-        const diff = changes.split(" ⇒ ");
-        console.log(diff);
-
-        diff[0].match(/-?\d+(\.\d+)?/g)//find old values
-        diff[1].match(/-?\d+(\.\d+)?/g)//find new values
-
-        //lets assume they place new values at the end
-        for (let i = 0; i < diff[1].length; i++) {
-            if (!diff[0][i])
-                delta.push('new');
-            else
-                delta.push(parseFloat(diff[1][i] - parseFloat(diff[0][i])));
-        }
-
+    } //there has been a change
+    console.log(changes);
+    const diff = changes.split('⇒');
+    if (diff.length < 2) {
         return {
             feature,
-            before: diff[0],
-            after: diff[1],
-            delta,
+            before: ['new'],
+            after: changes,
+            delta: ['new'],
         }
+    }
+    // console.log(diff);
+    const diffOld = diff[0].match(/-?\d+(\.\d+)?/g)//find old values
+    const diffNew = diff[1].match(/-?\d+(\.\d+)?/g)//find new values
+    const delta = [];
+
+    console.log(diffOld, diffNew);
+    if(!diffOld || !diffNew) {
+        return null; //TODO NOTES SUPPORT HERE TOO
+    }
+    //lets assume they place new values at the end
+    for (let i = 0; i < diffNew.length; i++) {
+        if (!diffOld[i])
+            delta.push('new');
+        else
+            delta.push(parseFloat(diffNew[i] - parseFloat(diffOld[i])));
+    }
+
+    return {
+        feature,
+        before: diffOld,
+        after: diffNew,
+        delta,
     }
 }
 
@@ -62,51 +77,64 @@ async function getPatch(patch) {
     const results = [];
     const champs = $('div.patch-change-block div');
 
-    champs.each((index, elem) => {
+    // await champs.each(async (i, elem) => {
+    for (let index = 0; index < champs.length; index++) {
+        const elem = champs[index]
         const changeList = [];
         let changes = $(elem).find('h4.change-detail-title');
         const champ = $(elem).find('h3.change-title').text();
+        // console.log(`champ: ${champ} - changes: ${changes}`);'
+        if(!champ) { //TODO NOTES SUPPORT (non-champ/item)
+            continue;
+        }
 
-        changes.each((index, elem) => {
-            const values = $(elem).next().children().toArray().map(async function(x) {
-                let text = $(x).text();
+        // await changes.each(async (i, elem) => {
+        for (let j = 0; j < changes.length; j++) {
+            const changeElem = changes[j];
+            const values = [];
+            const children = $(changeElem).next().children();
 
-                return await toNum(text);
-            });
+            // const values = await $(elem).next().children().toArray().map(async function(x) {
+            for (let k = 0; k < children.length; k++) {
+                let text = $(children[k]).text();
+                values.push(await toNum(text));
+            };
+            changeList.push({ change: $(changeElem).text(), values })
+            // console.log(changeList[i]);
+        }
 
-            changeList.push({ change: $(elem).text(), values })
-        })
-
+        // TODO: REIMPLEMENT ITEM CAPABILITY
         if (changeList.length == 0) { //the change is likely for an item, change selects
-            changes = $(elem).find('ul');
-            changes.each((index, elem) => {
-                const values = $(elem).children().toArray().map(async function(x) {
-                    let text = $(x).text();
-                    return await toNum(text);
-                });
+            const itemChanges = $(elem).find('ul');
+            for (let i = 0; i < itemChanges.length; i++) {
+                const itemChange = itemChanges[i];
+                const values = [];
+                const children = $(itemChange).children();
 
-                changeList.push({ values })
-            })
+                for (let j = 0; j < children.length; j++) {
+                    let text = $(children[j]).text();
+                    console.log(text);
+                    values.push(await toNum(text));
+                    console.log(`values: ${values}`);
+                }
+
+                changeList.push({ values });
+            }
         }
 
         if(changeList.length == 0) { 
             if(champ) //Defined champ/item name + empty list = new feature
                 changeList.push({ change: "Added" });
             else //if both are undefined then just ignore
-                return true; //acts as a "continue" in a JQuery each loop
+                continue; //acts as a "continue" in a JQuery each loop
         }
 
         results.push({ champ, changeList })
-    })
+    }
     return results;
 }
 
-// async function getDelta(startPatch, endPatch) {
-//     for()
-// }
-
-const patch = "14-2";
+const patch = "14-4";
 getPatch(patch).then(result => {
-    // console.log(result);
     fs.writeFile(`${patch}.json`, JSON.stringify(result, null, 2), 'utf8', () => { });
 }).catch(err => console.log(err));
