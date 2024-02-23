@@ -34,7 +34,7 @@ async function toNum(text) { //take a string and parse out numerical values/calc
             delta: ['removed'],
         }
     } //there has been a change
-    console.log(changes);
+    // console.log(changes);
     const diff = changes.split('⇒');
     if (diff.length < 2) {
         return {
@@ -49,7 +49,7 @@ async function toNum(text) { //take a string and parse out numerical values/calc
     const diffNew = diff[1].match(/-?\d+(\.\d+)?/g)//find new values
     const delta = [];
 
-    console.log(diffOld, diffNew);
+    // console.log(diffOld, diffNew);
     if(!diffOld || !diffNew) {
         return null; //TODO NOTES SUPPORT HERE TOO
     }
@@ -71,7 +71,11 @@ async function toNum(text) { //take a string and parse out numerical values/calc
 
 async function getPatch(patch) {
     const url = `https://www.leagueoflegends.com/en-gb/news/game-updates/patch-${patch}-notes/`;
-    const { data } = await axios.get(url);
+    try {
+        const { data } = await axios.get(url);
+    } catch (err) {
+        console.log(err);
+    }
     const $ = cheerio.load(data);
 
     const results = [];
@@ -103,7 +107,6 @@ async function getPatch(patch) {
             // console.log(changeList[i]);
         }
 
-        // TODO: REIMPLEMENT ITEM CAPABILITY
         if (changeList.length == 0) { //the change is likely for an item, change selects
             const itemChanges = $(elem).find('ul');
             for (let i = 0; i < itemChanges.length; i++) {
@@ -113,9 +116,9 @@ async function getPatch(patch) {
 
                 for (let j = 0; j < children.length; j++) {
                     let text = $(children[j]).text();
-                    console.log(text);
+                    // console.log(text);
                     values.push(await toNum(text));
-                    console.log(`values: ${values}`);
+                    // console.log(`values: ${values}`);
                 }
 
                 changeList.push({ values });
@@ -134,7 +137,86 @@ async function getPatch(patch) {
     return results;
 }
 
-const patch = "14-4";
-getPatch(patch).then(result => {
-    fs.writeFile(`${patch}.json`, JSON.stringify(result, null, 2), 'utf8', () => { });
-}).catch(err => console.log(err));
+function getIndex(list, val, feat) {
+    if (!feat) {
+        val = val.split(' ')[0];
+        for (let i = 0; i < list.length; i++) {
+            if (list[i].change.split(' ')[0] == val) {
+                return i;
+            }
+        }
+    } else {
+        for (let i = 0; i < list.length; i++) {
+            // console.log(`${list[i].change} == ${val}`);
+            if (list[i].feature == val) {
+                return i;
+            }
+        }
+    }
+    return -1;
+}
+
+async function getDelta(p1, p2) {
+    if (!p1 || JSON.stringify(p1) == '{}') {
+        return p2;
+    }
+    for (let i = 0; i < p2.changeList.length; i++) {
+        //if p1.changeList contains p2.changeList[i].change
+        // console.log(p1.changeList);
+        const cIndex = getIndex(p1.changeList, p2.changeList[i].change, false);
+        if (cIndex != -1) {
+            //for j < p2.changeList[i].values
+            for (let j = 0; j < p2.changeList[i].values.length; j++) {
+                //if p1.changeList[change] contains feature
+                const fIndex = getIndex(p1.changeList[cIndex].values, p2.changeList[i].values[j].feature, true);
+                // console.log(`fIndex: ${fIndex}`);
+                if (fIndex != -1) {
+                    //p1 after = p2 after
+                    p1.changeList[cIndex].values[fIndex].after = p2.changeList[i].values[j].after;
+                    //p1 delta += p2 delta
+                    for (let k = 0; k < p2.changeList[i].values[j].delta.length; k++) {
+                        if (!p1.changeList[cIndex].values[fIndex].delta[k])
+                            p1.changeList[cIndex].values[fIndex].delta.push('new');
+                        else
+                            p1.changeList[cIndex].values[fIndex].delta[k] += p2.changeList[i].values[j].delta[k];
+                    }
+                } else { //else p1.changeList.push feature
+                    p1.changeList[cIndex].values.push(p2.changeList[i].values[j]);
+                }               
+            }
+        } else { //else p1.changeList.push change
+            p1.changeList.push(p2.changeList[i]);
+        }
+    }
+    return p1;
+}
+    
+//for patch in range [start, end]
+    //get patch
+    //if patch has champ
+//delta = getDelta(delta, patch.champ)
+async function champDelta(champ) {
+    let delta = {};
+    for (let p = 1; p < 5; p++) {
+        const patch = await getPatch(`14-${p}`);
+        for (let c = 0; c < patch.length; c++) {
+            if (patch[c].champ == champ) {
+                delta = await getDelta(delta, patch[c]);
+            }
+        }
+    }
+    return delta;
+}
+
+champDelta('Illaoi').then((res) => {
+    console.log(JSON.stringify(res, null, 2));
+});
+
+// getDelta(p1, p2).then((res) => {
+//     console.log(JSON.stringify(res, null, 2));
+// });
+
+// const patch = "14-2";
+// getPatch(patch).then(result => {
+//     fs.writeFile(`patch-${patch}.json`, JSON.stringify(result, null, 2), 'utf8', () => { });
+// }).catch(err => console.log(err));
