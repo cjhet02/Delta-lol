@@ -71,11 +71,7 @@ async function toNum(text) { //take a string and parse out numerical values/calc
 
 async function getPatch(patch) {
     const url = `https://www.leagueoflegends.com/en-gb/news/game-updates/patch-${patch}-notes/`;
-    try {
-        const { data } = await axios.get(url);
-    } catch (err) {
-        console.log(err);
-    }
+    const { data } = await axios.get(url);
     const $ = cheerio.load(data);
 
     const results = [];
@@ -208,9 +204,35 @@ async function champDelta(champ) {
     return delta;
 }
 
-champDelta('Illaoi').then((res) => {
+champDelta(13, 20, 14, 4, 'Illaoi').then((res) => {
     console.log(JSON.stringify(res, null, 2));
 });
+
+async function champDelta(sSeason, sPatch, eSeason, ePatch, champ) {
+    let s = sSeason;
+    let p = sPatch;
+    let delta = {};
+    while(s < eSeason || p <= ePatch) {
+        //TODO: Change this to get from db        
+        for (let p = 1; p < 5; p++) {
+            const patch = await getPatch(`${s}-${p}`);
+            for (let c = 0; c < patch.length; c++) {
+                if (patch[c].champ == champ) {
+                    delta = await getDelta(delta, patch[c]);
+                }
+            }
+        }
+
+        if(p == 24) {
+            p = 1;
+            s++;
+        } else {
+            p++;
+        }
+    }
+
+    return delta;
+}
 
 // getDelta(p1, p2).then((res) => {
 //     console.log(JSON.stringify(res, null, 2));
