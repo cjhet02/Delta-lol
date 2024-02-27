@@ -17,6 +17,10 @@
   },
   "homepage": "https://github.com/cjhet02/Delta-lol#readme",
   "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "mongodb": "^6.3.0",
+    "mongoose": "^8.2.0",
     "nvm": "^0.0.4",
     "react-scripts": "^5.0.1"
   }
