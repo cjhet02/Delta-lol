@@ -11,8 +11,14 @@ const cheerio = require('cheerio');const fs = require('fs');
 async function toNum(text) { //take a string and parse out numerical values/calculate deltas
     text = text.split('(Note:')[0]; //remove any notes, as numbers will match regex
     let [ feature, changes ] = text.split(': ');
+    // console.log(feature, changes);
     if(!changes) {
-        return null;
+        return { //TODO: notes support
+            feature,
+            before: ['note'],    
+            after: ['note'],
+            delta: ['note'],
+        };
     }
     if(feature.search(/^new[^\s]/) != -1){
         feature = feature.slice(3);
@@ -51,16 +57,23 @@ async function toNum(text) { //take a string and parse out numerical values/calc
 
     // console.log(diffOld, diffNew);
     if(!diffOld || !diffNew) {
-        return null; //TODO NOTES SUPPORT HERE TOO
+        // console.log(`returning null ${text}`);
+        return { //TODO: notes support
+            feature,
+            before: [diff[0]],    
+            after: [diff[1]],
+            delta: ['change'],
+        };
     }
     //lets assume they place new values at the end
     for (let i = 0; i < diffNew.length; i++) {
         if (!diffOld[i])
             delta.push('new');
         else
-            delta.push(parseFloat(diffNew[i] - parseFloat(diffOld[i])));
+            delta.push(parseFloat(diffNew[i] - parseFloat(diffOld[i]))); //TODO round to 3 dec points?
     }
 
+    // console.log(delta);
     return {
         feature,
         before: diffOld,
@@ -71,7 +84,18 @@ async function toNum(text) { //take a string and parse out numerical values/calc
 
 async function getPatch(patch) {
     const url = `https://www.leagueoflegends.com/en-gb/news/game-updates/patch-${patch}-notes/`;
-    const { data } = await axios.get(url);
+    const { data } = await axios.get(url).catch((err) => {
+        if (err.response.status == 404) {
+            console.log(`404 on patch ${patch}`);
+            return {};
+        }
+        console.log(`error on patch ${patch} ${err.response.status}`);
+        throw err;
+    })
+    if(!data) {
+        return {};
+    }
+
     const $ = cheerio.load(data);
 
     const results = [];
@@ -98,6 +122,7 @@ async function getPatch(patch) {
             for (let k = 0; k < children.length; k++) {
                 let text = $(children[k]).text();
                 values.push(await toNum(text));
+                // console.log(values);
             };
             changeList.push({ change: $(changeElem).text(), values })
             // console.log(changeList[i]);
@@ -113,7 +138,15 @@ async function getPatch(patch) {
                 for (let j = 0; j < children.length; j++) {
                     let text = $(children[j]).text();
                     // console.log(text);
-                    values.push(await toNum(text));
+                    // values.push(await toNum(text));
+                    await toNum(text).then((res) => {
+                        if(res != null) {
+                            values.push(res);
+                        }
+                        // } else {
+                        //     console.log(`didn't push ${text}`);
+                        // }
+                    })
                     // console.log(`values: ${values}`);
                 }
 
@@ -137,14 +170,16 @@ function getIndex(list, val, feat) {
     if (!feat) {
         val = val.split(' ')[0];
         for (let i = 0; i < list.length; i++) {
-            if (list[i].change.split(' ')[0] == val) {
+            if (list[i] && list[i].change.split(' ')[0] == val) {
                 return i;
             }
         }
     } else {
         for (let i = 0; i < list.length; i++) {
-            // console.log(`${list[i].change} == ${val}`);
-            if (list[i].feature == val) {
+            // console.log(`${list[i].feature} == ${val}`);
+            // console.log(i);
+            if (list[i] && list[i].feature == val) {
+                // console.log(i, list[i].feature)
                 return i;
             }
         }
@@ -155,6 +190,8 @@ function getIndex(list, val, feat) {
 async function getDelta(p1, p2) {
     if (!p1 || JSON.stringify(p1) == '{}') {
         return p2;
+    } else if (!p2 || JSON.stringify(p2) == '{}') {
+        return p1;
     }
     for (let i = 0; i < p2.changeList.length; i++) {
         //if p1.changeList contains p2.changeList[i].change
@@ -162,8 +199,10 @@ async function getDelta(p1, p2) {
         const cIndex = getIndex(p1.changeList, p2.changeList[i].change, false);
         if (cIndex != -1) {
             //for j < p2.changeList[i].values
+            // console.log(p1.changeList[cIndex].values);
             for (let j = 0; j < p2.changeList[i].values.length; j++) {
                 //if p1.changeList[change] contains feature
+                console.log(p2.changeList[i].values);
                 const fIndex = getIndex(p1.changeList[cIndex].values, p2.changeList[i].values[j].feature, true);
                 // console.log(`fIndex: ${fIndex}`);
                 if (fIndex != -1) {
@@ -191,35 +230,31 @@ async function getDelta(p1, p2) {
     //get patch
     //if patch has champ
 //delta = getDelta(delta, patch.champ)
-async function champDelta(champ) {
-    let delta = {};
-    for (let p = 1; p < 5; p++) {
-        const patch = await getPatch(`14-${p}`);
-        for (let c = 0; c < patch.length; c++) {
-            if (patch[c].champ == champ) {
-                delta = await getDelta(delta, patch[c]);
-            }
-        }
-    }
-    return delta;
-}
-
-champDelta(13, 20, 14, 4, 'Illaoi').then((res) => {
-    console.log(JSON.stringify(res, null, 2));
-});
+// async function champDelta(champ) {
+//     let delta = {};
+//     for (let p = 1; p < 5; p++) {
+//         const patch = await getPatch(`14-${p}`);
+//         for (let c = 0; c < patch.length; c++) {
+//             if (patch[c].champ == champ) {
+//                 delta = await getDelta(delta, patch[c]);
+//             }
+//         }
+//     }
+//     return delta;
+// }
 
 async function champDelta(sSeason, sPatch, eSeason, ePatch, champ) {
     let s = sSeason;
     let p = sPatch;
     let delta = {};
-    while(s < eSeason || p <= ePatch) {
+    do {
         //TODO: Change this to get from db        
-        for (let p = 1; p < 5; p++) {
-            const patch = await getPatch(`${s}-${p}`);
-            for (let c = 0; c < patch.length; c++) {
-                if (patch[c].champ == champ) {
-                    delta = await getDelta(delta, patch[c]);
-                }
+        const patch = await getPatch(`${s}-${p}`);
+        for (let c = 0; c < patch.length; c++) {
+            if (patch[c].champ == champ) {
+                console.log(`${s}-${p}`);
+                delta = await getDelta(delta, patch[c]);
+                // console.log(delta);
             }
         }
 
@@ -229,10 +264,16 @@ async function champDelta(sSeason, sPatch, eSeason, ePatch, champ) {
         } else {
             p++;
         }
-    }
+    } while (s < eSeason || p <= ePatch);
 
     return delta;
 }
+
+//12.18 AND BEFORE HAVE A DIFFERENT LAYOUT FOR THE CHANGES
+champDelta(12, 19, 14, 3, 'Rell').then((res) => {
+    // console.log(JSON.stringify(res, null, 2));
+    fs.writeFile(`patch-delta.json`, JSON.stringify(res, null, 2), 'utf8', () => { });
+});
 
 // getDelta(p1, p2).then((res) => {
 //     console.log(JSON.stringify(res, null, 2));
