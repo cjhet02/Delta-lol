@@ -36,6 +36,18 @@ app.get("/", (req, res) => {
     }
 });
 
+app.get("/patch", async (req, res) => {
+    try {
+        let result = await Patch.findOne(req.query).exec();
+        if(result){
+            result = result.toObject();
+            res.send(result);
+        }
+    } catch (err) {
+        res.send(`Error: ${err}`);
+    }
+});
+
 app.post("/patch", async (req, res) => {
     try {
         const patch = new Patch(req.body);
