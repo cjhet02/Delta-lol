@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const express = require('express');
 const app = express();
 const cors = require("cors");
-console.log(process.env.mongoPass);
 const uri = `mongodb+srv://jcabigas:${process.env.mongoPass}@patch-cluster.u48z1az.mongodb.net/?retryWrites=true&w=majority&appName=patch-cluster`;
 
 mongoose.connect(uri);
@@ -34,6 +33,21 @@ app.get("/", (req, res) => {
         res.send("App is working");
     } catch (err) {
         console.log(`Error: ${err}`);
+    }
+});
+
+app.post("/patch", async (req, res) => {
+    try {
+        const patch = new Patch(req.body);
+        let result = await patch.save();
+        result = result.toObject();
+        if (result) {
+            res.send(req.body);
+        } else {
+            console.log("Post Failed");
+        }
+    } catch (err) {
+        res.send(`Error: ${err}`);
     }
 });
 
