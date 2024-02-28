@@ -15,8 +15,8 @@ async function toNum(text) { //take a string and parse out numerical values/calc
     if(!changes) {
         return { //TODO: notes support
             feature,
-            before: ['note'],    
-            after: ['note'],
+            before: 'note',    
+            after: 'note',
             delta: ['note'],
         };
     }
@@ -27,7 +27,7 @@ async function toNum(text) { //take a string and parse out numerical values/calc
         if(changes.indexOf('⇒') == -1) {
             return {
                 feature,
-                before: ['new'],    
+                before: 'new',    
                 after: changes,
                 delta: ['new'],
             }
@@ -36,7 +36,7 @@ async function toNum(text) { //take a string and parse out numerical values/calc
         return {
             feature: feature.slice(7),
             before: changes,
-            after: ['removed'],
+            after: 'removed',
             delta: ['removed'],
         }
     } //there has been a change
@@ -45,7 +45,7 @@ async function toNum(text) { //take a string and parse out numerical values/calc
     if (diff.length < 2) {
         return {
             feature,
-            before: ['new'],
+            before: 'new',
             after: changes,
             delta: ['new'],
         }
@@ -60,8 +60,8 @@ async function toNum(text) { //take a string and parse out numerical values/calc
         // console.log(`returning null ${text}`);
         return { //TODO: notes support
             feature,
-            before: [diff[0]],    
-            after: [diff[1]],
+            before: diff[0],    
+            after: diff[1],
             delta: ['change'],
         };
     }
@@ -76,8 +76,8 @@ async function toNum(text) { //take a string and parse out numerical values/calc
     // console.log(delta);
     return {
         feature,
-        before: diffOld,
-        after: diffNew,
+        before: diff[0],
+        after: diff[1],
         delta,
     }
 }
@@ -163,7 +163,8 @@ async function getPatch(patch) {
 
         results.push({ champ, changeList })
     }
-    return results;
+    // console.log(JSON.stringify({patch, changes: results}, null, 2));
+    return {patch, changes: results};
 }
 
 function getIndex(list, val, feat) {
@@ -250,11 +251,20 @@ async function champDelta(sSeason, sPatch, eSeason, ePatch, champ) {
     do {
         //TODO: Change this to get from db        
         const patch = await getPatch(`${s}-${p}`);
-        for (let c = 0; c < patch.length; c++) {
-            if (patch[c].champ == champ) {
+        if(JSON.stringify(patch) == '{}') {
+            if(p == 24) {
+                p = 1;
+                s++;
+            } else {
+                p++;
+            }
+            continue;
+        }
+        for (let c = 0; c < patch.changes.length; c++) {
+            if (patch.changes[c].champ == champ) {
                 console.log(`${s}-${p}`);
-                delta = await getDelta(delta, patch[c]);
-                // console.log(delta);
+                delta = await getDelta(delta, patch.changes[c]);
+                console.log(delta);
             }
         }
 
@@ -270,10 +280,38 @@ async function champDelta(sSeason, sPatch, eSeason, ePatch, champ) {
 }
 
 //12.18 AND BEFORE HAVE A DIFFERENT LAYOUT FOR THE CHANGES
-champDelta(12, 19, 14, 3, 'Rell').then((res) => {
-    // console.log(JSON.stringify(res, null, 2));
-    fs.writeFile(`patch-delta.json`, JSON.stringify(res, null, 2), 'utf8', () => { });
-});
+//13-2 IS 13-1b CAUSE FUCK YOU
+// champDelta(12, 19, 14, 4, 'Zeri').then((res) => {
+//     console.log(JSON.stringify(res, null, 2));
+//     // fs.writeFile(`patch-delta.json`, JSON.stringify(res, null, 2), 'utf8', () => { });
+// });
+// let s = 12;
+// let p = 19;
+// let eSeason = 14;
+// let ePatch = 4;
+// do {
+    //TODO: Change this to get from db        
+    // getPatch(`${s}-${p}`).then(async (res) => {
+    //     if(JSON.stringify(res) != '{}') {
+    //         const resp = await fetch('http://localhost:3002/patch', {
+    //             method: "POST",
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //             },
+    //             body: JSON.stringify(res)
+    //         });
+
+    //         console.log(resp.status);
+    //     }
+    // });
+    
+//     if(p == 24) {
+//         p = 1;
+//         s++;
+//     } else {
+//         p++;
+//     }
+// } while (s < eSeason || p <= ePatch);
 
 // getDelta(p1, p2).then((res) => {
 //     console.log(JSON.stringify(res, null, 2));
