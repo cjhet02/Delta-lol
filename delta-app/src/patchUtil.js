@@ -1,5 +1,6 @@
+const cheerio = require('cheerio');
 const axios = require('axios');
-const cheerio = require('cheerio');const fs = require('fs');
+// const fs = require('fs');
 
 // {
 //     feature = ''
@@ -82,7 +83,27 @@ async function toNum(text) { //take a string and parse out numerical values/calc
     }
 }
 
+
+
 async function getPatch(patch) {
+    const url = `http://localhost:3002/patch?patch=${patch}`;
+    const data = await fetch(url, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    }).catch((err) => {
+        console.log(`error on patch ${patch} ${err.response.status}`);
+        throw err;
+    })
+    if(!data) {
+        return {};
+    }
+    // console.log(data.json());
+    return data.json();
+}
+
+async function scrapePatch(patch){
     const url = `https://www.leagueoflegends.com/en-gb/news/game-updates/patch-${patch}-notes/`;
     const { data } = await axios.get(url).catch((err) => {
         if (err.response.status == 404) {
@@ -244,12 +265,19 @@ async function getDelta(p1, p2) {
 //     return delta;
 // }
 
-async function champDelta(sSeason, sPatch, eSeason, ePatch, champ) {
+export async function champDelta(sSeason, sPatch, eSeason, ePatch, champ) {
     let s = sSeason;
     let p = sPatch;
     let delta = {};
     do {
-        //TODO: Change this to get from db        
+        //handle edge cases
+        if(s === 13 && p === 2)
+            p = '1b';
+        else if (s === 12 && p === 24) {
+            s++;
+            p = 1;
+        }
+
         const patch = await getPatch(`${s}-${p}`);
         if(JSON.stringify(patch) == '{}') {
             if(p == 24) {
@@ -264,7 +292,7 @@ async function champDelta(sSeason, sPatch, eSeason, ePatch, champ) {
             if (patch.changes[c].champ == champ) {
                 console.log(`${s}-${p}`);
                 delta = await getDelta(delta, patch.changes[c]);
-                console.log(delta);
+                // console.log(delta);
             }
         }
 
