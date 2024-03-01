@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const express = require('express');
 const app = express();
 const cors = require("cors");
+require('dotenv').config();
 const uri = `mongodb+srv://jcabigas:${process.env.mongoPass}@patch-cluster.u48z1az.mongodb.net/?retryWrites=true&w=majority&appName=patch-cluster`;
 
 mongoose.connect(uri);
