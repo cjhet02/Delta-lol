@@ -235,7 +235,7 @@ async function getDelta(p1, p2) {
                         if (!p1.changeList[cIndex].values[fIndex].delta[k])
                             p1.changeList[cIndex].values[fIndex].delta.push('new');
                         else
-                            p1.changeList[cIndex].values[fIndex].delta[k] += p2.changeList[i].values[j].delta[k];
+                            p1.changeList[cIndex].values[fIndex].delta[k] = parseFloat(p1.changeList[cIndex].values[fIndex].delta[k]) + parseFloat(p2.changeList[i].values[j].delta[k]);
                     }
                 } else { //else p1.changeList.push feature
                     p1.changeList[cIndex].values.push(p2.changeList[i].values[j]);
