@@ -1,14 +1,30 @@
 // import logo from './logo.svg';
 import './App.css';
 import * as patchUtil from './patchUtil.js';
-
+import { getStats } from './parse.js';
 import { useState } from "react";
+import { Chart } from "react-google-charts";
 
 function App() {
   const [delta, setDelta] = useState({champ: "", changeList: []});
   const [champ, setChamp] = useState("");
   const [start, setStart] = useState("");
   const [end, setEnd] = useState("");
+
+  const sample = [
+    ['Patch', 'Win_P'],
+    ['12.9', 47.54],
+    ['12.10', 52.14],
+    ['12.11', 51.02],
+    ['12.12', 49.59]
+  ];
+
+  const options = {
+    title: "Orianna",
+    hAxis: { title: "Patch", titleTextStyle: { color: "#333" } },
+    vAxis: { minValue: 0 },
+    chartArea: { width: "50%", height: "70%" },
+  };
 
   const ChangeItem = ({ change, values }) => (
     <div>
@@ -47,6 +63,13 @@ function App() {
   return (
     <div className="App">
       <h1>fuck it we ball</h1>
+      <Chart
+      chartType="AreaChart"
+      width="100%"
+      height="400px"
+      data={sample}
+      options={options}
+      />
       <div>
         <input value={start} onChange={e => setStart(e.target.value)}/>
         <input value={end} onChange={e => setEnd(e.target.value)}/>
