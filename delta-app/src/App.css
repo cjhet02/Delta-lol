@@ -1,5 +1,7 @@
 .App {
+  background-color: #282c34;
   text-align: center;
+  color: #f0f0f0;
 }
 
 .App-logo {
@@ -35,4 +37,61 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+ul {
+  margin-left: 100px;
+  margin-right: 100px;
+  padding: 10px;
+}
+
+.champion-changes {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.change-box {
+  background-color: transparent;
+  /* border: 1px solid #a2a2a2; */
+  padding: 10px, 10px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+}
+
+.change-item {
+  margin-bottom: 15px;
+  padding: 0px;
+}
+
+.feature-box {
+  background-color: transparent;
+  border: 1px solid #a2a2a2;
+  padding: 10px, 10px;
+  border-radius: 5px;
+  margin-bottom: 2px;
+}
+
+.feature-box h4 {
+  margin-top: 0;
+}
+
+.feature-box div {
+  margin-top: 5px;
+}
+
+.feature-box strong {
+  font-weight: bold;
+}
+
+.positive {
+  color: rgb(65, 171, 65);
+}
+
+.negative {
+  color: rgb(255, 66, 66);
+}
+
+.neutral {
+  color: #f0f0f0;
 }

@@ -24,6 +24,25 @@ const patchSchema = new mongoose.Schema({
 });
 const Patch = mongoose.model('Patch', patchSchema);
 
+const statsSchema = new mongoose.Schema({ //NOTE CAPITALIZATION DIFFERENCES
+    patch: String,
+    champs: [{
+        Row: Number,
+        Name: String,
+        Class: String,
+        Role: String,
+        Tier: String,
+        Score: Number,
+        Trend: Number,
+        Win: Number,
+        Role_P: Number,
+        Pick: Number,
+        Ban: Number,
+        KDA: Number,
+    }]
+});
+const Stats = mongoose.model('Stats', statsSchema);
+
 app.use(express.json());
 app.use(cors());
 console.log("app listening at port 3002");
@@ -53,6 +72,33 @@ app.post("/patch", async (req, res) => {
     try {
         const patch = new Patch(req.body);
         let result = await patch.save();
+        result = result.toObject();
+        if (result) {
+            res.send(req.body);
+        } else {
+            console.log("Post Failed");
+        }
+    } catch (err) {
+        res.send(`Error: ${err}`);
+    }
+});
+
+app.get("/stats", async (req, res) => {
+    try {
+        let result = await Stats.findOne(req.query).exec();
+        if(result){
+            result = result.toObject();
+            res.send(result);
+        }
+    } catch (err) {
+        res.send(`Error: ${err}`);
+    }
+});
+
+app.post("/stats", async (req, res) => {
+    try {
+        const stats = new Stats(req.body);
+        let result = await stats.save();
         result = result.toObject();
         if (result) {
             res.send(req.body);
