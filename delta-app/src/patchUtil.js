@@ -93,7 +93,7 @@ async function getPatch(patch) {
             "Content-Type": "application/json",
         },
     }).catch((err) => {
-        console.log(`error on patch ${patch} ${err.response.status}`);
+        console.log(`error on patch ${patch} ${err}`);
         throw err;
     })
     if(!data) {
@@ -216,21 +216,12 @@ async function getDelta(p1, p2) {
         return p1;
     }
     for (let i = 0; i < p2.changeList.length; i++) {
-        //if p1.changeList contains p2.changeList[i].change
-        // console.log(p1.changeList);
         const cIndex = getIndex(p1.changeList, p2.changeList[i].change, false);
         if (cIndex !== -1) {
-            //for j < p2.changeList[i].values
-            // console.log(p1.changeList[cIndex].values);
             for (let j = 0; j < p2.changeList[i].values.length; j++) {
-                //if p1.changeList[change] contains feature
-                // console.log(p2.changeList[i].values);
                 const fIndex = getIndex(p1.changeList[cIndex].values, p2.changeList[i].values[j].feature, true);
-                // console.log(`fIndex: ${fIndex}`);
                 if (fIndex !== -1) {
-                    //p1 after = p2 after
                     p1.changeList[cIndex].values[fIndex].after = p2.changeList[i].values[j].after;
-                    //p1 delta += p2 delta
                     for (let k = 0; k < p2.changeList[i].values[j].delta.length; k++) {
                         if (!p1.changeList[cIndex].values[fIndex].delta[k])
                             p1.changeList[cIndex].values[fIndex].delta.push('new');
@@ -309,9 +300,6 @@ export async function champDelta(sSeason, sPatch, eSeason, ePatch, champ) {
     return delta;
 }
 
-export async function parsePatch(patch) {
-
-}
 
 //12.18 AND BEFORE HAVE A DIFFERENT LAYOUT FOR THE CHANGES
 //13-2 IS 13-1b CAUSE FUCK YOU
