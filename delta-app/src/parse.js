@@ -63,9 +63,10 @@ async function getStats(patch) {
 }
 
 export async function getChampStats(champ, role, sSeason, sPatch, eSeason, ePatch) {
+    champ = champ.charAt(0).toUpperCase() + champ.toLowerCase().slice(1);
     let s = sSeason;
     let p = sPatch;
-    let matrix = [[/*'Name', 'Class', 'Role', 'Tier', 'Score', 'Trend', */'Patch', 'Win', 'Role_P', 'Pick', 'Ban', 'KDA']];
+    let matrix = [['Patch', 'Win', 'Role_P', 'Pick', 'Ban', 'KDA']];
     do {
         //handle edge cases
         if(s === 13 && p === 2)

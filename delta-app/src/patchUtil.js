@@ -257,6 +257,7 @@ async function getDelta(p1, p2) {
 // }
 
 export async function champDelta(sSeason, sPatch, eSeason, ePatch, champ) {
+    champ = champ.charAt(0).toUpperCase() + champ.toLowerCase().slice(1);
     let s = sSeason;
     let p = sPatch;
     let delta = {};
