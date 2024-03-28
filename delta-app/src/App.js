@@ -2,10 +2,9 @@
 import './App.css';
 import * as patchUtil from './patchUtil.js';
 import { getChampStats } from './parse.js';
-import { useState } from "react";
 import { Chart } from "react-google-charts";
-import React from 'react';
-import { Button, Dropdown, ButtonGroup, Form, FloatingLabel } from 'react-bootstrap';
+import React, { useState, useEffect, useRef } from 'react';
+import { Dropdown, ButtonGroup, FloatingLabel, Form, Button } from 'react-bootstrap';
 
 function App() {
   const [delta, setDelta] = useState({champ: "", changeList: []});
@@ -14,11 +13,11 @@ function App() {
   const [start, setStart] = useState("");
   const [end, setEnd] = useState("");
   const [stats, setStats] = useState(null);
-
+  
   // Function to extract specific columns from matrix data
-const extractColumns = (data, columns) => {
-  return data?.map(row => columns.map(col => row[col]));
-};
+  const extractColumns = (data, columns) => {
+    return data?.map(row => columns.map(col => row[col]));
+  };
 
   const options = {
     titleTextStyle: { color: '#f0f0f0' },
@@ -68,7 +67,8 @@ const extractColumns = (data, columns) => {
   
   const ChampionChanges = ({ champ, changeList }) => (
     <div>
-      <h2>{champ} Changes</h2>
+      <hr class="solid"/>
+      <h2>{champ} Changes: </h2>
       <h3>Before {start} ⇒ After {end}</h3> <br />
       {changeList?.map((changeItem, index) => ( 
         <div key={index} className="change-box">
@@ -96,11 +96,11 @@ const extractColumns = (data, columns) => {
       <h1>Delta</h1>
       <Form.Group>
         <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center' }}>
-          <FloatingLabel label="Champion" controlId='floatingInput'>
+          <FloatingLabel label="Champion" controlId='floatingInput' className="mb-1" style={{ color: '#323438b2' }}>
             <Form.Control type='text' placeholder='Lebron James' value={champ} onChange={e => setChamp(e.target.value)} style={{ label: 'Champion', width: '150px', height: '38px' }}/>
-          </FloatingLabel>
+          
           <Dropdown as={ButtonGroup}>
-            <Dropdown.Toggle id="dropdown-basic" style={{ minWidth: '100px' }}>
+            <Dropdown.Toggle id="dropdown-basic" style={{ height: '38px', minWidth: '150px' }}>
               {role ? role : 'Select Role'}
             </Dropdown.Toggle>
 
@@ -112,17 +112,18 @@ const extractColumns = (data, columns) => {
               <Dropdown.Item onClick={() => handleRoleSelect('Support')}>Support</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
+          </FloatingLabel>
         </div>
         <label>Patches:</label>
         <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center' }}>
-          <FloatingLabel label="Before" controlId='floatingInput'>
-            <Form.Control value={start} placeholder='lebron' onChange={e => setStart(e.target.value)} size="4" style={{ height: '38px' }} />
+          <FloatingLabel label="Before" controlId='floatingInput' className="mb-1" style={{ color: '#323438b2' }}>
+            <Form.Control value={start} placeholder='lebron' onChange={e => setStart(e.target.value)} size="sm" style={{ padding: '0', lineHeight: '30px' }} />
           </FloatingLabel>
-          <FloatingLabel label="After" controlId='floatingInput'>
-            <Form.Control value={end} placeholder='james' onChange={e => setEnd(e.target.value)} size="4" style={{height: '38px'}}/>
+          <FloatingLabel label="After" controlId='floatingInput' className="mb-1" style={{ color: '#323438b2' }}>
+            <Form.Control value={end} placeholder='james' onChange={e => setEnd(e.target.value)} size="sm" style={{ padding: '0', lineHeight: '30px' }}/>
           </FloatingLabel>
-          </div>
-        <Button type='submit' onClick={handleDelta}>Get Delta</Button>
+        </div>
+        <Button type='submit' onClick={handleDelta} style={{ width: '320px' }}>Get Delta</Button>
       </Form.Group>
       <RenderChart data={extractColumns(stats, [0, 1])} />
       <RenderChart data={extractColumns(stats, [0, 3, 4])} />
