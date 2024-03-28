@@ -5,6 +5,7 @@ import { getChampStats } from './parse.js';
 import { useState } from "react";
 import { Chart } from "react-google-charts";
 import React from 'react';
+import { Button, Dropdown, ButtonGroup, Form, FloatingLabel } from 'react-bootstrap';
 
 function App() {
   const [delta, setDelta] = useState({champ: "", changeList: []});
@@ -14,15 +15,18 @@ function App() {
   const [end, setEnd] = useState("");
   const [stats, setStats] = useState(null);
 
+  // Function to extract specific columns from matrix data
+const extractColumns = (data, columns) => {
+  return data?.map(row => columns.map(col => row[col]));
+};
+
   const options = {
     titleTextStyle: { color: '#f0f0f0' },
     legendTextStyle: { color: '#f0f0f0' }, 
-    title: "Stats Over Time",
     hAxis: { title: "Patch", titleTextStyle: { color: "#f0f0f0" }, textStyle: { color: '#f0f0f0' } },
     vAxis: { minValue: 0, textStyle: { color: '#f0f0f0' } },
     chartArea: { width: "50%", height: "70%" },
     backgroundColor: '#282c34',
-
   };
 
   function RenderChart({ data }) {
@@ -33,7 +37,7 @@ function App() {
       chartType="AreaChart"
       width="100%"
       height="400px"
-      data={stats}
+      data={data}
       options={options}
     />)
   };
@@ -83,17 +87,47 @@ function App() {
     setStats(statData);
   };
 
+  const handleRoleSelect = (role) => {
+    setRole(role);
+  };
+
   return (
     <div className="App">
       <h1>Delta</h1>
-      <RenderChart data={stats}/>
-      <div>
-        <input value={start} onChange={e => setStart(e.target.value)}/>
-        <input value={end} onChange={e => setEnd(e.target.value)}/>
-      </div>
-      <input value={champ} onChange={e => setChamp(e.target.value)} />
-      <input value={role} onChange={e => setRole(e.target.value)} />
-      <button type="submit" onClick={handleDelta}>Get Patch</button>
+      <Form.Group>
+        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center' }}>
+          <FloatingLabel label="Champion" controlId='floatingInput'>
+            <Form.Control type='text' placeholder='Lebron James' value={champ} onChange={e => setChamp(e.target.value)} style={{ label: 'Champion', width: '150px', height: '38px' }}/>
+          </FloatingLabel>
+          <Dropdown as={ButtonGroup}>
+            <Dropdown.Toggle id="dropdown-basic" style={{ minWidth: '100px' }}>
+              {role ? role : 'Select Role'}
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu>
+              <Dropdown.Item onClick={() => handleRoleSelect('Top')}>Top</Dropdown.Item>
+              <Dropdown.Item onClick={() => handleRoleSelect('Jungle')}>Jungle</Dropdown.Item>
+              <Dropdown.Item onClick={() => handleRoleSelect('Mid')}>Mid</Dropdown.Item>
+              <Dropdown.Item onClick={() => handleRoleSelect('ADC')}>ADC</Dropdown.Item>
+              <Dropdown.Item onClick={() => handleRoleSelect('Support')}>Support</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </div>
+        <label>Patches:</label>
+        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center' }}>
+          <FloatingLabel label="Before" controlId='floatingInput'>
+            <Form.Control value={start} placeholder='lebron' onChange={e => setStart(e.target.value)} size="4" style={{ height: '38px' }} />
+          </FloatingLabel>
+          <FloatingLabel label="After" controlId='floatingInput'>
+            <Form.Control value={end} placeholder='james' onChange={e => setEnd(e.target.value)} size="4" style={{height: '38px'}}/>
+          </FloatingLabel>
+          </div>
+        <Button type='submit' onClick={handleDelta}>Get Delta</Button>
+      </Form.Group>
+      <RenderChart data={extractColumns(stats, [0, 1])} />
+      <RenderChart data={extractColumns(stats, [0, 3, 4])} />
+      <RenderChart data={extractColumns(stats, [0, 5])} />
+      <RenderChart data={extractColumns(stats, [0, 2])} />
       <div>
         <ChampionChanges { ...delta }/>
       </div>

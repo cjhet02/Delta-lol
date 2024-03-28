@@ -1,5 +1,6 @@
 .App {
   background-color: #282c34;
+  background-size: cover;
   text-align: center;
   color: #f0f0f0;
 }
@@ -23,7 +24,7 @@
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: #282c34;
 }
 
 .App-link {
@@ -94,4 +95,8 @@ ul {
 
 .neutral {
   color: #f0f0f0;
+}
+
+input { 
+  text-align: center; 
 }
