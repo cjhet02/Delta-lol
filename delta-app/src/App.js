@@ -115,7 +115,6 @@ function App() {
           </Dropdown>
           </FloatingLabel>
         </div>
-        <label>Patches:</label>
         <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center' }}>
           <FloatingLabel label="Before" controlId='floatingInput' className="mb-1" style={{ color: '#323438b2' }}>
             <Form.Control value={start} placeholder='lebron' onChange={e => setStart(e.target.value)} size="sm" style={{ padding: '0', lineHeight: '30px' }} />
