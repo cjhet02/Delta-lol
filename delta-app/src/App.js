@@ -1,4 +1,4 @@
-// import logo from './logo.svg';
+import logo from './logo.svg';
 import './App.css';
 import * as patchUtil from './patchUtil.js';
 import { getChampStats } from './parse.js';
@@ -93,7 +93,8 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Delta</h1>
+      <img src={logo} alt="logo" style={{ margin: '-50px' }}/>
+      <h1>Delta LoL</h1>
       <Form.Group>
         <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center' }}>
           <FloatingLabel label="Champion" controlId='floatingInput' className="mb-1" style={{ color: '#323438b2' }}>
