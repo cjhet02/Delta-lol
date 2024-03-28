@@ -256,8 +256,17 @@ async function getDelta(p1, p2) {
 //     return delta;
 // }
 
+function toTitleCase(str) {
+    return str.replace(
+      /\w\S*/g,
+      function(txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+      }
+    );
+  }
+
 export async function champDelta(sSeason, sPatch, eSeason, ePatch, champ) {
-    champ = champ.charAt(0).toUpperCase() + champ.toLowerCase().slice(1);
+    champ = toTitleCase(champ);
     let s = sSeason;
     let p = sPatch;
     let delta = {};
