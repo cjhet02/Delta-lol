@@ -77,7 +77,7 @@ export async function getChampStats(champ, role, sSeason, sPatch, eSeason, ePatc
     let s = sSeason;
     let p = sPatch;
     let matrix = [['Patch', 'Win', 'Role_P', 'Pick', 'Ban', 'KDA']];
-    do {
+    while (s !== eSeason || p <= ePatch) {
         //handle edge cases
         if(s === 13 && p === 2)
             p = 3;
@@ -85,6 +85,7 @@ export async function getChampStats(champ, role, sSeason, sPatch, eSeason, ePatc
             s++;
             p = 1;
         }
+        console.log(`${s}.${p}`)
         const patch = await getStats(`${s}.${p}`);
         const index = await findChamp(champ, role, patch.champs);
         if (index != null) {
@@ -101,8 +102,7 @@ export async function getChampStats(champ, role, sSeason, sPatch, eSeason, ePatc
         } else {
             p++;
         }
-    } while (s < eSeason || p <= ePatch);
-
+    }
     return (matrix.length > 1 ? matrix : null);
 }
 

@@ -57,14 +57,12 @@ app.get("/", (req, res) => {
 });
 
 app.get("/patch", async (req, res) => {
-    try {
-        let result = await Patch.findOne(req.query).exec();
-        if(result){
-            result = result.toObject();
-            res.send(result);
-        }
-    } catch (err) {
-        res.send(`Error: ${err}`);
+    let result = await Patch.findOne(req.query).exec();
+    if (result === null) {
+        res.status(400);
+    } else {
+        result = result.toObject();
+        res.send(result);
     }
 });
 
@@ -98,8 +96,14 @@ app.get("/stats", async (req, res) => {
 app.post("/stats", async (req, res) => {
     try {
         const stats = new Stats(req.body);
-        let result = await stats.save();
+        console.log(stats.patch);
+        let result = await Stats.findOneAndUpdate(
+            { patch: req.body.patch },
+            { champs: stats.champs },
+            {upsert: true}
+        );
         result = result.toObject();
+        console.log(result)
         if (result) {
             res.send(req.body);
         } else {
