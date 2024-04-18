@@ -3,15 +3,16 @@ import './App.css';
 import * as patchUtil from './patchUtil.js';
 import { getChampStats } from './parse.js';
 import { Chart } from "react-google-charts";
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { Dropdown, ButtonGroup, FloatingLabel, Form, Button } from 'react-bootstrap';
+import { Slider, Carousel } from 'antd';
 
 function App() {
   const [delta, setDelta] = useState({champ: "", changeList: []});
   const [champ, setChamp] = useState("");
   const [role, setRole] = useState("");
-  const [start, setStart] = useState("");
-  const [end, setEnd] = useState("");
+  const [start, setStart] = useState("12.1");
+  const [end, setEnd] = useState("14.8");
   const [stats, setStats] = useState(null);
   
   // Function to extract specific columns from matrix data
@@ -39,6 +40,72 @@ function App() {
       data={data}
       options={options}
     />)
+  };
+
+  const Graphs = () => {
+    const onChangeCard = (currentSlide) => {
+      console.log(currentSlide);
+    };
+    if (stats) {
+      return (
+        <div style={{ margin: 'auto' }}>
+          <Carousel afterChange={onChangeCard} dotPosition='top'>
+            <div>
+              <RenderChart data={extractColumns(stats, [0, 1])} />
+              <h3 style={{ color: '#f0f0f0' }}>Win %</h3>
+            </div>
+            <div>
+              <RenderChart data={extractColumns(stats, [0, 3, 4])} />
+              <h3 style={{ color: '#f0f0f0' }}>Pick vs. Ban Rates</h3>
+            </div>
+            <div>
+              <RenderChart data={extractColumns(stats, [0, 5])} />
+              <h3 style={{ color: '#f0f0f0' }}>KDA</h3>
+            </div>
+            <div>
+              <RenderChart data={extractColumns(stats, [0, 2])} />
+              <h3 style={{ color: '#f0f0f0' }}>% in Role</h3>
+            </div>
+          </Carousel>
+        </div>
+      );
+    } else
+      return (
+        <h4 align="center">Select a champion and range for stats!</h4>
+      )
+  };
+
+  function formatter(value) {
+    const i = Math.floor(value / 24);
+    const season = i + 12;
+    const patch = value - (24 * i) + 1;
+    return season.toString() + "." + patch.toString();
+  }
+  // function deformat(value) {
+  //   const split = value.split('.');
+  //   if (!split[1])
+  //     return 0;
+  //   // const sNum = split[0].parseInt();
+  //   // const pNum = split[1].parseInt();
+  //   return (split[0].parseInt() - 12) + split[1].parseInt();
+  // }
+
+  function sliderChange(value) {
+    setStart(formatter(value[0]));
+    setEnd(formatter(value[1]));
+  }
+
+  const marks = {
+    0: {
+      label: '12.1',
+      style: {
+        color: '#f0f0f0'
+      }},
+    55: {
+      label: '14.8',
+      style: {
+        color: '#f0f0f0'
+      }}
   };
 
   const ChangeItem = ({ change, values }) => (
@@ -115,20 +182,27 @@ function App() {
           </Dropdown>
           </FloatingLabel>
         </div>
-        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center' }}>
-          <FloatingLabel label="Before" controlId='floatingInput' className="mb-1" style={{ color: '#323438b2' }}>
+        <div style={{ width: '500px', margin: 'auto', }}>
+          <Slider range={{ draggableTrack: true }}
+            defaultValue={[0, 58]} min={0} max={55}
+            tooltip={{ formatter }} onChange={sliderChange}
+            marks={marks} included={true}/>
+        </div>
+        {/*<div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center' }}>
+           <FloatingLabel label="Before" controlId='floatingInput' className="mb-1" style={{ color: '#323438b2' }}>
             <Form.Control value={start} placeholder='lebron' onChange={e => setStart(e.target.value)} size="sm" style={{ padding: '0', lineHeight: '30px' }} />
           </FloatingLabel>
           <FloatingLabel label="After" controlId='floatingInput' className="mb-1" style={{ color: '#323438b2' }}>
             <Form.Control value={end} placeholder='james' onChange={e => setEnd(e.target.value)} size="sm" style={{ padding: '0', lineHeight: '30px' }}/>
-          </FloatingLabel>
-        </div>
+          </FloatingLabel> 
+        </div>*/}
         <Button type='submit' onClick={handleDelta} style={{ width: '320px' }}>Get Delta</Button>
       </Form.Group>
-      <RenderChart data={extractColumns(stats, [0, 1])} />
+      <Graphs/>
+      {/* <RenderChart data={extractColumns(stats, [0, 1])} />
       <RenderChart data={extractColumns(stats, [0, 3, 4])} />
       <RenderChart data={extractColumns(stats, [0, 5])} />
-      <RenderChart data={extractColumns(stats, [0, 2])} />
+      <RenderChart data={extractColumns(stats, [0, 2])} /> */}
       <div>
         <ChampionChanges { ...delta }/>
       </div>
