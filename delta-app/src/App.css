@@ -105,3 +105,17 @@ input {
 .FloatingLabel {
   color: #323438b2; /* Adjust the color as needed */
 }
+
+.custom-tab .ant-tabs-tab {
+  color: #f0f0f0; /* Change this to the desired font color */
+}
+
+/* Override the selected color */
+.ant-table-thead th.ant-table-column-sort {
+  background-color: #e6f7ff; /* Change this to the desired selected color */
+}
+
+/* Override the hover color */
+.ant-table-thead th.ant-table-column-sort:hover {
+  background-color: #bae7ff; /* Change this to the desired hover color */
+}

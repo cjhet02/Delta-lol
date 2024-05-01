@@ -1,0 +1,20 @@
+version: '3.8'
+services:
+  api:
+    build: ./backend
+    container_name: api_backend
+    ports:
+      - '3002:3002'
+    volumes:
+      - /app/backend
+      - /app/node_modules
+  client:
+    build: ./delta-app
+    container_name: client_frontend
+    ports:
+      - '3000:3000'
+    volumes:
+      - /app/delta
+      - /app/node_modules
+    stdin_open: true
+    tty: true

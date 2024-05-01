@@ -4,8 +4,9 @@ import * as patchUtil from './patchUtil.js';
 import { getChampStats } from './parse.js';
 import { Chart } from "react-google-charts";
 import React, { useState } from 'react';
-import { Dropdown, ButtonGroup, FloatingLabel, Form, Button } from 'react-bootstrap';
-import { Slider, Carousel } from 'antd';
+import { Dropdown, ButtonGroup, FloatingLabel, Form, Button, TabPane } from 'react-bootstrap';
+import { Slider, Carousel, Tabs } from 'antd';
+import StatsTable from './table.js';
 
 function App() {
   const [delta, setDelta] = useState({champ: "", changeList: []});
@@ -14,6 +15,7 @@ function App() {
   const [start, setStart] = useState("12.1");
   const [end, setEnd] = useState("14.8");
   const [stats, setStats] = useState(null);
+  const [table, setTable] = useState(null);
   
   // Function to extract specific columns from matrix data
   const extractColumns = (data, columns) => {
@@ -132,18 +134,24 @@ function App() {
     </div>
   );
   
-  const ChampionChanges = ({ champ, changeList }) => (
-    <div>
-      <hr class="solid"/>
-      <h2>{champ} Changes: </h2>
-      <h3>Before {start} ⇒ After {end}</h3> <br />
-      {changeList?.map((changeItem, index) => ( 
-        <div key={index} className="change-box">
-          <ChangeItem key={index} {...changeItem} />
-        </div>
-      ))}
-    </div>
-  );
+  const ChampionChanges = ({ champ, changeList }) => {
+    if (!champ) {
+      return (<div style={{width: '950px', margin: 'auto', background: 'transparent', color: '#f0f0f0'}}>
+        <h3>Select a champion for delta patch!</h3>
+      </div>)  
+    }
+    return (
+      <div style={{width: '950px', margin: 'auto', background: 'transparent', color: '#f0f0f0'}}>
+        <h2>{champ} Changes: </h2>
+        <h3>Before {start} ⇒ After {end}</h3> <br />
+        {changeList?.map((changeItem, index) => (
+          <div key={index} className="change-box">
+            <ChangeItem key={index} {...changeItem} />
+          </div>
+        ))}
+      </div>
+    )
+  };
   
   const handleDelta = async () => {
     const sSplit = start.split('.');
@@ -151,7 +159,11 @@ function App() {
     const changes = await patchUtil.champDelta(parseInt(sSplit[0]), parseInt(sSplit[1]), parseInt(eSplit[0]), parseInt(eSplit[1]), champ);
     setDelta(changes);
     const statData = await getChampStats(champ, role.toUpperCase(), parseInt(sSplit[0]), parseInt(sSplit[1]), parseInt(eSplit[0]), parseInt(eSplit[1]));
-    setStats(statData);
+    if (statData.matrix) {
+      setStats(statData.matrix);
+    }
+    setTable(statData.delta);
+    console.log(table);
   };
 
   const handleRoleSelect = (role) => {
@@ -188,23 +200,18 @@ function App() {
             tooltip={{ formatter }} onChange={sliderChange}
             marks={marks} included={true}/>
         </div>
-        {/*<div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center' }}>
-           <FloatingLabel label="Before" controlId='floatingInput' className="mb-1" style={{ color: '#323438b2' }}>
-            <Form.Control value={start} placeholder='lebron' onChange={e => setStart(e.target.value)} size="sm" style={{ padding: '0', lineHeight: '30px' }} />
-          </FloatingLabel>
-          <FloatingLabel label="After" controlId='floatingInput' className="mb-1" style={{ color: '#323438b2' }}>
-            <Form.Control value={end} placeholder='james' onChange={e => setEnd(e.target.value)} size="sm" style={{ padding: '0', lineHeight: '30px' }}/>
-          </FloatingLabel> 
-        </div>*/}
         <Button type='submit' onClick={handleDelta} style={{ width: '320px' }}>Get Delta</Button>
       </Form.Group>
-      <Graphs/>
-      {/* <RenderChart data={extractColumns(stats, [0, 1])} />
-      <RenderChart data={extractColumns(stats, [0, 3, 4])} />
-      <RenderChart data={extractColumns(stats, [0, 5])} />
-      <RenderChart data={extractColumns(stats, [0, 2])} /> */}
+      <Graphs />
       <div>
-        <ChampionChanges { ...delta }/>
+        <Tabs centered className="custom-tab">
+          <TabPane tab="Stats" key="1">
+              {table !== null && <StatsTable data={table} />}
+          </TabPane>
+          <TabPane tab="Patch" key="2">
+            <ChampionChanges {...delta}/>
+          </TabPane>
+        </Tabs>
       </div>
     </div>
   );
