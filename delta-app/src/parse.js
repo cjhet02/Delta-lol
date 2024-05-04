@@ -84,16 +84,11 @@ function statMatchRole(champ, role, data, i, up) {
 function subMat(matrixA, matrixB) {
     console.log(matrixA, matrixB);
     const numRowsA = matrixA.length;
-    const numRowsB = matrixB.length;
-    const numCols = Object.keys(matrixA[0]).length; // Assuming all rows have the same length
-
-    // Determine the number of rows for the result matrix
-    const numRowsResult = Math.max(numRowsA, numRowsB);
 
     const result = [];
 
     for (let i = 1; i < numRowsA; i++) {
-        let index = findChamp(matrixA[i].Name, matrixA[i].Role, matrixB);
+        let index = findChamp(matrixA[i].Name, matrixB);
         index = (statMatchRole(matrixA[i]['Name'], matrixA[i]['Role'], matrixB, index, true) || statMatchRole(matrixA[i]['Name'], matrixA[i]['Role'], matrixB, index, false));
 
         if (index !== null) {
@@ -140,7 +135,7 @@ export async function getChampStats(champ, role, sSeason, sPatch, eSeason, ePatc
 
         //get champ stats (for graphs)
         if (champ) {
-            let index = findChamp(champ, role, patch.champs);
+            let index = findChamp(champ, patch.champs);
             index = matchRole(champ, role, patch.champs, index);
             
             if (index != null) {
@@ -176,18 +171,20 @@ function matchRole(champ, role, data, i) {
     }
 }
 
-function findChamp(champ, role, data) {
+function findChamp(champ, data) {
     let left = 0;
     let right = data.length - 1;
     while (left <= right) {
         const mid = Math.floor((left + right) / 2);
+        if(champ === 'Aatrox')
+            console.log(mid, data[mid].Name)
         if (data[mid].Name === champ) {
             // return matchRole(champ, role, data, mid); // Found the champ at index mid
             return mid;
         } else if (data[mid].Name < champ) {
             left = mid + 1; // Continue searching in the right half
         } else {
-            right = mid - 1; // Continue searching in the left half
+            right = mid; // Continue searching in the left half
         }
     }
     

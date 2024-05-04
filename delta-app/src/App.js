@@ -13,7 +13,7 @@ function App() {
   const [champ, setChamp] = useState("");
   const [role, setRole] = useState("");
   const [start, setStart] = useState("12.1");
-  const [end, setEnd] = useState("14.8");
+  const [end, setEnd] = useState("14.9");
   const [stats, setStats] = useState(null);
   const [table, setTable] = useState(null);
   
@@ -103,8 +103,8 @@ function App() {
       style: {
         color: '#f0f0f0'
       }},
-    55: {
-      label: '14.8',
+    56: {
+      label: '14.9',
       style: {
         color: '#f0f0f0'
       }}
@@ -196,17 +196,19 @@ function App() {
         </div>
         <div style={{ width: '500px', margin: 'auto', }}>
           <Slider range={{ draggableTrack: true }}
-            defaultValue={[0, 58]} min={0} max={55}
+            defaultValue={[0, 56]} min={0} max={56}
             tooltip={{ formatter }} onChange={sliderChange}
             marks={marks} included={true}/>
         </div>
         <Button type='submit' onClick={handleDelta} style={{ width: '320px' }}>Get Delta</Button>
       </Form.Group>
-      <Graphs />
+      {role !== "" && <Graphs/>}
       <div>
         <Tabs centered className="custom-tab">
           <TabPane tab="Stats" key="1">
-              {table !== null && <StatsTable data={table} />}
+            <h2 style={{color: '#f0f0f0'}}>All Stat Changes: </h2>
+            <h3 style={{color: '#f0f0f0'}}>Before {start} ⇒ After {end}</h3> <br />
+            {table !== null && <StatsTable data={table} />}
           </TabPane>
           <TabPane tab="Patch" key="2">
             <ChampionChanges {...delta}/>

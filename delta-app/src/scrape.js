@@ -297,19 +297,19 @@ async function scrapeStats(patch){
 // let s = 12;
 // let p = 1;
 // do {
-    scrapeOldPatch('10-16b').then(async (res) => {
-        // console.log(JSON.stringify(res, null, 2));
-        if (JSON.stringify(res) !== '{}') {
-            const resp = await fetch('http://localhost:3002/patch', {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(res)
-            });
-            console.log(`${res.patch}: ${resp.statusText}`);
-        }
-    });
+    // scrapeOldPatch('10-16b').then(async (res) => {
+    //     // console.log(JSON.stringify(res, null, 2));
+    //     if (JSON.stringify(res) !== '{}') {
+    //         const resp = await fetch('http://localhost:3002/patch', {
+    //             method: "POST",
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //             },
+    //             body: JSON.stringify(res)
+    //         });
+    //         console.log(`${res.patch}: ${resp.statusText}`);
+    //     }
+    // });
 //     if (p === 1) {
 //         p = 25;
 //         s--;
@@ -323,40 +323,40 @@ async function scrapeStats(patch){
 //     console.log(JSON.stringify(res, null, 2));
 //     // fs.writeFile(`patch-delta.json`, JSON.stringify(res, null, 2), 'utf8', () => { });
 // });
-// let s = 13;
-// let p = 15;
+// let s = 14;
+// let p = 8;
 // let eSeason = 14;
-// let ePatch = 7;
+// let ePatch = 9;
 // do {
-    // scrapePatch(`${s}-${p}`).then(async (res) => {
-    //     if(JSON.stringify(res) !== '{}') {
-    //         const resp = await fetch('http://localhost:3002/patch', {
-    //             method: "POST",
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //             },
-    //             body: JSON.stringify(res)
-    //         });
-
-    //         console.log(resp.status);
-    //     }
-// });
-// const patches = ['11.24', '10.25', '9.24', '8.24', '7.24', '6.24'];
-
-// for (let i = 0; i < patches.length; i++) {
-//     scrapeStats(patches[i]).then(async (res) => {
-//         console.log(res.patch, res.champs[1])
-//         if (JSON.stringify(res) !== '{}') {
-//             const resp = await fetch('http://localhost:3002/stats', {
+//     scrapePatch(`${s}-${p}`).then(async (res) => {
+//         if(JSON.stringify(res) !== '{}') {
+//             const resp = await fetch('http://localhost:3002/patch', {
 //                 method: "POST",
 //                 headers: {
 //                     "Content-Type": "application/json",
 //                 },
 //                 body: JSON.stringify(res)
 //             });
+
 //             console.log(resp.status);
 //         }
-//     });
+// });
+// const patches = ['11.24', '10.25', '9.24', '8.24', '7.24', '6.24'];
+
+// for (let i = 0; i < patches.length; i++) {
+    // scrapeStats(`${s}.${p}`).then(async (res) => {
+    //     console.log(res.patch, res.champs[1])
+    //     if (JSON.stringify(res) !== '{}') {
+    //         const resp = await fetch('http://localhost:3002/stats', {
+    //             method: "POST",
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //             },
+    //             body: JSON.stringify(res)
+    //         });
+    //         console.log(resp.status);
+    //     }
+    // });
 // }
     
 //     if(p === 24) {
