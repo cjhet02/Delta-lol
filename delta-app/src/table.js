@@ -1,8 +1,8 @@
 import './table.css';
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { Table, TableContainer, TableHead, TableBody, TableRow, TableCell, TableSortLabel, Paper } from '@mui/material';
 
-const columns = [
+const allColumns = [
   { title: 'Champion', dataIndex: 'Name' },
   { title: 'Role', dataIndex: 'Role' },
   { title: 'Tier', dataIndex: 'Tier' },
@@ -15,32 +15,54 @@ const columns = [
   { title: 'KDA', dataIndex: 'KDA' }
 ];
 
+const TEXT_FIELDS = new Set(['Name', 'Role', 'Tier']);
+
+function filterColumns(data) {
+  return allColumns.filter(col => {
+    if (TEXT_FIELDS.has(col.dataIndex)) return true;
+    return data.some(row => parseFloat(row[col.dataIndex]) !== 0);
+  });
+}
+
+const cellStyleMap = new Map();
+function getCellStyle(value) {
+  const key = isNaN(value) ? 'nan' : (value < 0 ? 'neg' : 'pos');
+  let style = cellStyleMap.get(key);
+  if (!style) {
+    style = {
+      color: key === 'nan' ? '#f0f0f0' : (key === 'neg' ? 'red' : 'green')
+    };
+    cellStyleMap.set(key, style);
+  }
+  return style;
+}
+
 const TableComponent = ({ data }) => {
   const [orderBy, setOrderBy] = useState('');
   const [order, setOrder] = useState('asc');
 
-  const handleSort = (columnId) => {
-    const isAsc = orderBy === columnId && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
+  const columns = useMemo(() => filterColumns(data), [data]);
+
+  const handleSort = useCallback((columnId) => {
+    setOrder(prev => {
+      const isAsc = orderBy === columnId && prev === 'asc';
+      return isAsc ? 'desc' : 'asc';
+    });
     setOrderBy(columnId);
-  };
+  }, [orderBy]);
 
-  const sortedData = data.sort((a, b) => {
-    const aValue = parseFloat(a[orderBy]);
-    const bValue = parseFloat(b[orderBy]);
-
-    if (order === 'asc') {
-      return aValue > bValue ? 1 : -1;
-    } else {
-      return aValue < bValue ? 1 : -1;
-    }
-  });
-
-  const getCellStyle = (value) => {
-    return {
-      color: (isNaN(value) ? '#f0f0f0' : (value < 0 ? 'red' : 'green'))
-    };
-  };
+  const sortedData = useMemo(() => {
+    if (!orderBy) return data;
+    return [...data].sort((a, b) => {
+      const aValue = parseFloat(a[orderBy]);
+      const bValue = parseFloat(b[orderBy]);
+      if (order === 'asc') {
+        return aValue > bValue ? 1 : -1;
+      } else {
+        return aValue < bValue ? 1 : -1;
+      }
+    });
+  }, [data, orderBy, order]);
 
   return (
     <TableContainer component={Paper} style={{width: '950px', margin: 'auto', background: 'transparent'}}>

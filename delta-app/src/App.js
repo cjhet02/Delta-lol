@@ -15,6 +15,7 @@ function App() {
   const [start, setStart] = useState("12.1");
   const [end, setEnd] = useState("14.9");
   const [stats, setStats] = useState(null);
+  const [ticks, setTicks] = useState([]);
   const [table, setTable] = useState(null);
   
   // Function to extract specific columns from matrix data
@@ -25,7 +26,7 @@ function App() {
   const options = {
     titleTextStyle: { color: '#f0f0f0' },
     legendTextStyle: { color: '#f0f0f0' }, 
-    hAxis: { title: "Patch", titleTextStyle: { color: "#f0f0f0" }, textStyle: { color: '#f0f0f0' } },
+    hAxis: { title: "Patch", titleTextStyle: { color: "#f0f0f0" }, textStyle: { color: '#f0f0f0' }, slantedText: true, slantedTextAngle: 45 },
     vAxis: { minValue: 0, textStyle: { color: '#f0f0f0' } },
     chartArea: { width: "50%", height: "70%" },
     backgroundColor: '#282c34',
@@ -35,12 +36,17 @@ function App() {
     if (!data)
       return null;
 
+    const chartOptions = {
+      ...options,
+      hAxis: { ...options.hAxis, ticks: ticks }
+    };
+
     return (<Chart
       chartType="AreaChart"
       width="100%"
       height="400px"
       data={data}
-      options={options}
+      options={chartOptions}
     />)
   };
 
@@ -57,16 +63,8 @@ function App() {
               <h3 style={{ color: '#f0f0f0' }}>Win %</h3>
             </div>
             <div>
-              <RenderChart data={extractColumns(stats, [0, 3, 4])} />
+              <RenderChart data={extractColumns(stats, [0, 2, 3])} />
               <h3 style={{ color: '#f0f0f0' }}>Pick vs. Ban Rates</h3>
-            </div>
-            <div>
-              <RenderChart data={extractColumns(stats, [0, 5])} />
-              <h3 style={{ color: '#f0f0f0' }}>KDA</h3>
-            </div>
-            <div>
-              <RenderChart data={extractColumns(stats, [0, 2])} />
-              <h3 style={{ color: '#f0f0f0' }}>% in Role</h3>
             </div>
           </Carousel>
         </div>
@@ -156,14 +154,22 @@ function App() {
   const handleDelta = async () => {
     const sSplit = start.split('.');
     const eSplit = end.split('.');
-    const changes = await patchUtil.champDelta(parseInt(sSplit[0]), parseInt(sSplit[1]), parseInt(eSplit[0]), parseInt(eSplit[1]), champ);
+    const sSeason = parseInt(sSplit[0]), sPatchNum = parseInt(sSplit[1]);
+    const eSeason = parseInt(eSplit[0]), ePatchNum = parseInt(eSplit[1]);
+
+    const [changes, statData] = await Promise.all([
+      patchUtil.champDelta(sSeason, sPatchNum, eSeason, ePatchNum, champ),
+      getChampStats(champ, role.toUpperCase(), sSeason, sPatchNum, eSeason, ePatchNum)
+    ]);
+
     setDelta(changes);
-    const statData = await getChampStats(champ, role.toUpperCase(), parseInt(sSplit[0]), parseInt(sSplit[1]), parseInt(eSplit[0]), parseInt(eSplit[1]));
     if (statData.matrix) {
       setStats(statData.matrix);
     }
+    if (statData.ticks) {
+      setTicks(statData.ticks);
+    }
     setTable(statData.delta);
-    console.log(table);
   };
 
   const handleRoleSelect = (role) => {

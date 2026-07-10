@@ -3,7 +3,7 @@ const express = require('express');
 const app = express();
 const cors = require("cors");
 require('dotenv').config();
-const uri = `mongodb+srv://jcabigas:${process.env.mongoPass}@patch-cluster.u48z1az.mongodb.net/?retryWrites=true&w=majority&appName=patch-cluster`;
+const uri = `mongodb+srv://cjhet:${process.env.mongoPass}@deltalol.2iguczw.mongodb.net/?retryWrites=true&w=majority&appName=DeltaLoL`;
 
 mongoose.connect(uri);
 
@@ -43,7 +43,7 @@ const statsSchema = new mongoose.Schema({ //NOTE CAPITALIZATION DIFFERENCES
 });
 const Stats = mongoose.model('Stats', statsSchema);
 
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 app.use(cors());
 console.log("app listening at port 3002");
 
@@ -59,7 +59,7 @@ app.get("/", (req, res) => {
 app.get("/patch", async (req, res) => {
     let result = await Patch.findOne(req.query).exec();
     if (result === null) {
-        res.status(400);
+        res.status(400).send({});
     } else {
         result = result.toObject();
         res.send(result);
@@ -87,6 +87,8 @@ app.get("/stats", async (req, res) => {
         if(result){
             result = result.toObject();
             res.send(result);
+        } else {
+            res.status(400).send({});
         }
     } catch (err) {
         res.send(`Error: ${err}`);
@@ -100,14 +102,13 @@ app.post("/stats", async (req, res) => {
         let result = await Stats.findOneAndUpdate(
             { patch: req.body.patch },
             { champs: stats.champs },
-            {upsert: true}
+            {upsert: true, new: true}
         );
-        result = result.toObject();
-        console.log(result)
         if (result) {
             res.send(req.body);
         } else {
             console.log("Post Failed");
+            res.status(500).send("Post Failed");
         }
     } catch (err) {
         res.send(`Error: ${err}`);
