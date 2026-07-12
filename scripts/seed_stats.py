@@ -18,6 +18,22 @@ LOCAL_CACHE = "/tmp/lol_stats.parquet"
 
 ROLE_MAP = {"top": "Top", "jungle": "Jungle", "middle": "Mid", "adc": "ADC", "support": "Support"}
 
+# The dataset uses old numbering: 15.x = season 25, 16.x = season 26
+# Season 25 has S1 sub-divisions: 15.1→25.S1.1, 15.2→25.S1.2, 15.3→25.S1.3
+def remap_patch(patch):
+    parts = patch.split('.')
+    major = int(parts[0])
+    minor = int(parts[1].rstrip('b'))
+
+    if major == 15:
+        if minor <= 3:
+            return f"25.S1.{minor}"
+        else:
+            return f"25.{minor}"
+    elif major == 16:
+        return f"26.{minor}"
+    return patch
+
 
 def download_parquet():
     if os.path.exists(LOCAL_CACHE):
@@ -37,12 +53,21 @@ def convert(args):
     if args.patch:
         df = df[df["patch"] == args.patch]
     elif not args.all:
-        df = df[df["patch"].str.match(r"^1[2-9]\.|^[2-9][0-9]\.")]
+        # Exclude season 16 (now sourced from Lolalytics), patch 15.24 (bad upstream data),
+        # and filter to 12.1+
+        df = df[df["patch"].str.match(r"^1[2-5]\.|^[2-9][0-9]\.") & ~df["patch"].str.startswith("16.") & (df["patch"] != "15.24")]
+
+    # Deduplicate: keep only the latest date per champion-role-patch
+    df = df.sort_values("date").drop_duplicates(subset=["champion", "role", "patch"], keep="last")
+
+    # Drop rows with zero winrate (incomplete upstream data)
+    df = df[df["winrate"] > 0]
 
     df["role"] = df["role"].map(ROLE_MAP)
 
     result = {}
     for patch, group in df.groupby("patch"):
+        remapped = remap_patch(patch)
         champs = []
         for _, row in group.iterrows():
             champs.append({
@@ -59,7 +84,7 @@ def convert(args):
                 "KDA": 0,
             })
         champs.sort(key=lambda x: x["Name"])
-        result[patch] = {"patch": patch, "champs": champs}
+        result[remapped] = {"patch": remapped, "champs": champs}
 
     with open(args.output, "w") as f:
         json.dump(result, f)

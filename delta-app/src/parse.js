@@ -90,18 +90,38 @@ function subMat(matrixA, matrixB) {
     return result;
 }
 
-function getPatchLabels(sSeason, sPatch, eSeason, ePatch) {
+function getPatchLabels(sSeason, sPatch, eSeason, ePatch, sSub, eSub) {
     const labels = [];
     let s = sSeason, p = sPatch;
-    while (s !== eSeason || p <= ePatch) {
-        if (s === 13 && p === 2) p = 3;
-        else if (s === 12 && p === 24) { s++; p = 1; }
+    let sub = sSub || null;
 
-        labels.push(`${s}.${p}`);
+    while (s < eSeason || (s === eSeason && p <= ePatch)) {
+        let display;
+        if (s === 25 && sub) {
+            display = `25.S1.${p}`;
+        } else {
+            display = `${s}.${p}`;
+        }
+        labels.push(display);
 
-        if (p === 24) { p = 1; s++; }
-        else if (p === '1b') p = 3;
-        else p++;
+        if (s === 25 && sub === null && p === 1) {
+            sub = 's1';
+            p = 1;
+        } else if (s === 25 && sub === 's1' && p === 3) {
+            sub = null;
+            p = 4;
+        } else if (p === 24) {
+            s++;
+            if (s >= 15 && s <= 24) s = 25;
+            p = 1;
+            sub = null;
+        } else if (p === '1b') {
+            p = 3;
+        } else if (p === '16b') {
+            p = 18;
+        } else {
+            p++;
+        }
     }
     return labels;
 }
@@ -122,15 +142,17 @@ function findChamp(champ, data) {
     return null;
 }
 
-export async function getChampStats(champ, role, sSeason, sPatch, eSeason, ePatch) {
+export async function getChampStats(champ, role, sSeason, sPatch, eSeason, ePatch, sSub, eSub) {
     champ = toTitleCase(champ);
-    const labels = getPatchLabels(sSeason, sPatch, eSeason, ePatch);
+    const labels = getPatchLabels(sSeason, sPatch, eSeason, ePatch, sSub, eSub);
 
     const results = await Promise.all(labels.map(l => getStats(l).catch(() => null)));
     const patches = labels.map((l, i) => ({ label: l, data: results[i] }));
 
-    const baseEntry = patches.find(p => p.label === `${sSeason}.${sPatch}` && p.data?.champs);
-    const endEntry = patches.find(p => p.label === `${eSeason}.${ePatch}` && p.data?.champs);
+    const baseLabel = sSub ? `25.S1.${sPatch}` : `${sSeason}.${sPatch}`;
+    const endLabel = eSub ? `25.S1.${ePatch}` : `${eSeason}.${ePatch}`;
+    const baseEntry = patches.find(p => p.label === baseLabel && p.data?.champs);
+    const endEntry = patches.find(p => p.label === endLabel && p.data?.champs);
     const delta = (baseEntry && endEntry) ? subMat(endEntry.data.champs, baseEntry.data.champs) : null;
 
     let matrix = [['Patch', 'Win', 'Pick', 'Ban']];

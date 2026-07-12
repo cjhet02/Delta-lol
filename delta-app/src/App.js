@@ -13,7 +13,7 @@ function App() {
   const [champ, setChamp] = useState("");
   const [role, setRole] = useState("");
   const [start, setStart] = useState("12.1");
-  const [end, setEnd] = useState("14.9");
+  const [end, setEnd] = useState("26.13");
   const [stats, setStats] = useState(null);
   const [ticks, setTicks] = useState([]);
   const [table, setTable] = useState(null);
@@ -33,7 +33,7 @@ function App() {
   };
 
   function RenderChart({ data }) {
-    if (!data)
+    if (!data || data.length <= 1)
       return null;
 
     const chartOptions = {
@@ -76,10 +76,26 @@ function App() {
   };
 
   function formatter(value) {
-    const i = Math.floor(value / 24);
-    const season = i + 12;
-    const patch = value - (24 * i) + 1;
-    return season.toString() + "." + patch.toString();
+    if (value <= 71) {
+      // Seasons 12-14: 24 patches each (positions 0-71)
+      const i = Math.floor(value / 24);
+      const season = i + 12;
+      const patch = value - (24 * i) + 1;
+      return season.toString() + "." + patch.toString();
+    } else if (value <= 97) {
+      // Season 25: positions 72-97 (26 patches: S1.1, S1.2, S1.3, then 4-24)
+      const offset = value - 72;
+      if (offset < 3) {
+        return "25.S1." + (offset + 1).toString();
+      } else {
+        return "25." + (offset + 1).toString();
+      }
+    } else {
+      // Season 26+: positions 98+
+      const season = 26;
+      const patch = value - 97;
+      return season.toString() + "." + patch.toString();
+    }
   }
   // function deformat(value) {
   //   const split = value.split('.');
@@ -101,8 +117,8 @@ function App() {
       style: {
         color: '#f0f0f0'
       }},
-    56: {
-      label: '14.9',
+    110: {
+      label: '26.13',
       style: {
         color: '#f0f0f0'
       }}
@@ -154,12 +170,29 @@ function App() {
   const handleDelta = async () => {
     const sSplit = start.split('.');
     const eSplit = end.split('.');
-    const sSeason = parseInt(sSplit[0]), sPatchNum = parseInt(sSplit[1]);
-    const eSeason = parseInt(eSplit[0]), ePatchNum = parseInt(eSplit[1]);
+    const sSeason = parseInt(sSplit[0]);
+    const eSeason = parseInt(eSplit[0]);
+
+    // Handle S1 sub-division format (e.g., "25.S1.3")
+    let sPatchNum, sSub = null;
+    if (sSplit[1] === 'S1') {
+        sSub = 's1';
+        sPatchNum = parseInt(sSplit[2]);
+    } else {
+        sPatchNum = parseInt(sSplit[1]);
+    }
+
+    let ePatchNum, eSub = null;
+    if (eSplit[1] === 'S1') {
+        eSub = 's1';
+        ePatchNum = parseInt(eSplit[2]);
+    } else {
+        ePatchNum = parseInt(eSplit[1]);
+    }
 
     const [changes, statData] = await Promise.all([
-      patchUtil.champDelta(sSeason, sPatchNum, eSeason, ePatchNum, champ),
-      getChampStats(champ, role.toUpperCase(), sSeason, sPatchNum, eSeason, ePatchNum)
+      patchUtil.champDelta(sSeason, sPatchNum, eSeason, ePatchNum, sSub, eSub, champ),
+      getChampStats(champ, role, sSeason, sPatchNum, eSeason, ePatchNum, sSub, eSub)
     ]);
 
     setDelta(changes);
@@ -202,7 +235,7 @@ function App() {
         </div>
         <div style={{ width: '500px', margin: 'auto', }}>
           <Slider range={{ draggableTrack: true }}
-            defaultValue={[0, 56]} min={0} max={56}
+            defaultValue={[0, 110]} min={0} max={110}
             tooltip={{ formatter }} onChange={sliderChange}
             marks={marks} included={true}/>
         </div>

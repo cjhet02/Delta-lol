@@ -206,35 +206,185 @@ async function postPatch(data) {
 // For season 13 patch 2, use "13-1b". For season 10 patch 16b, use "10-16b".
 // Stats are imported separately via: node importStats.js /tmp/lol_stats.json
 
-async function scrapeRange(sSeason, sPatch, eSeason, ePatch) {
+// Season 25 uses a special numbering: S1.1, S1.2, S1.3, then 04-24
+function buildPatchSequence(sSeason, sPatch, eSeason, ePatch) {
+    const patches = [];
     let s = sSeason;
     let p = sPatch;
-    do {
-        if (s === 13 && p === 2) p = '1b';
-        else if (s === 10 && p === 17) p = '16b';
-        else if (s === 12 && p === 24) { s++; p = 1; continue; }
+    let sub = null; // null = normal, 's1' = season sub-division
 
-        const patchId = `${s}-${p}`;
-        process.stdout.write(`${patchId}... `);
+    while (s < eSeason || (s === eSeason && p <= ePatch && !sub)) {
+        // Apply known patch substitutions
+        let scrapeId;
+        if (s === 13 && p === 2) {
+            scrapeId = `${s}-1b`;
+        } else if (s === 10 && p === 17) {
+            scrapeId = `${s}-16b`;
+        } else if (s === 25 && sub) {
+            scrapeId = `25-${sub}-${p}`;
+        } else {
+            scrapeId = `${s}-${p}`;
+        }
+
+        patches.push({ season: s, patch: p, sub, scrapeId });
+
+        // Advance to next patch
+        if (s === 25 && sub === null && p === 1) {
+            // After 25-1, start S1 sub-division
+            sub = 's1';
+            p = 1;
+        } else if (s === 25 && sub === 's1' && p === 3) {
+            // After 25-S1-3, go to patch 4 (no sub-division)
+            sub = null;
+            p = 4;
+        } else if (p === 24) {
+            s++;
+            // Seasons 15-24 don't exist, skip to 25
+            if (s >= 15 && s <= 24) s = 25;
+            p = 1;
+            sub = null;
+        } else if (p === '1b') {
+            p = 3;
+        } else if (p === '16b') {
+            p = 18;
+        } else {
+            p++;
+        }
+    }
+    return patches;
+}
+
+function patchUrls(season, patch, sub) {
+    const locales = ['en-gb', 'en-us'];
+    const paths = [];
+
+    if (season === 25 && sub) {
+        // Season 25 S1: patch-25-s1-{P}-notes or patch-2025-s1-{P}-notes
+        if (patch === 3) {
+            // 25-S1-3 uses calendar year
+            paths.push(`patch-2025-${sub}-${patch}-notes`);
+        }
+        paths.push(`patch-25-${sub}-${patch}-notes`);
+    } else if (season === 25) {
+        // Season 25 patches 4+: patch-25-{PP}-notes (zero-padded)
+        paths.push(`patch-25-${String(patch).padStart(2, '0')}-notes`);
+        paths.push(`patch-25-${patch}-notes`);
+    } else if (season >= 26) {
+        // Season 26+: try both URL formats
+        paths.push(`patch-${season}-${patch}-notes`);
+        paths.push(`league-of-legends-patch-${season}-${patch}-notes`);
+    } else {
+        paths.push(`patch-${season}-${patch}-notes`);
+    }
+
+    // Generate full URLs with locale fallback
+    const urls = [];
+    for (const path of paths) {
+        for (const locale of locales) {
+            urls.push(`https://www.leagueoflegends.com/${locale}/news/game-updates/${path}/`);
+        }
+    }
+    return urls;
+}
+
+async function fetchPatchPage(urls) {
+    for (const url of urls) {
+        const { data } = await axios.get(url).catch((err) => {
+            if (err.response && err.response.status === 404) {
+                return { data: null };
+            }
+            console.log(`error fetching ${url}: ${err.response ? err.response.status : err.message}`);
+            throw err;
+        });
+        if (data) return data;
+    }
+    return null;
+}
+
+async function scrapeRange(sSeason, sPatch, eSeason, ePatch) {
+    const patches = buildPatchSequence(sSeason, sPatch, eSeason, ePatch);
+
+    for (const { season: s, patch: p, sub, scrapeId } of patches) {
+        process.stdout.write(`${scrapeId}... `);
 
         const isOld = s < 12 || (s === 12 && p <= 18);
-        const data = isOld
-            ? await scrapeOldPatch(patchId)
-            : await scrapePatch(patchId);
+        let data;
+        if (s >= 25) {
+            const urls = patchUrls(s, p, sub);
+            const html = await fetchPatchPage(urls);
+            if (!html) { console.log('empty'); continue; }
+            data = await parsePatchPage(html, scrapeId);
+        } else {
+            data = isOld
+                ? await scrapeOldPatch(scrapeId)
+                : await scrapePatch(scrapeId);
+        }
 
-        if (JSON.stringify(data) !== '{}') {
+        if (data && JSON.stringify(data) !== '{}') {
             const resp = await postPatch(data);
             console.log(`${resp.status} ${resp.statusText}`);
         } else {
             console.log('empty');
         }
-
-        if (p === 24) { p = 1; s++; }
-        else if (p === '1b') p = 3;
-        else if (p === '16b') p = 18;
-        else p++;
-    } while (s !== eSeason || p <= ePatch);
+    }
 }
 
-// Scrape patches 12.1 through 14.10
-scrapeRange(12, 1, 14, 10).catch(console.error);
+// Parse a patch page that's already been fetched (for season 26+ with different URL format)
+async function parsePatchPage(html, patchId) {
+    const $ = cheerio.load(html);
+    const results = [];
+    const champs = $('div.patch-change-block div');
+
+    for (let index = 0; index < champs.length; index++) {
+        const elem = champs[index];
+        const changeList = [];
+        let changes = $(elem).find('h4.change-detail-title');
+        const champ = $(elem).find('h3.change-title').text();
+
+        if (!champ) continue;
+
+        for (let j = 0; j < changes.length; j++) {
+            const changeElem = changes[j];
+            const values = [];
+            const children = $(changeElem).next().children();
+
+            for (let k = 0; k < children.length; k++) {
+                let text = $(children[k]).text();
+                values.push(await toNum(text));
+            }
+            changeList.push({ change: $(changeElem).text(), values });
+        }
+
+        if (changeList.length === 0) {
+            const itemChanges = $(elem).find('ul');
+            for (let i = 0; i < itemChanges.length; i++) {
+                const itemChange = itemChanges[i];
+                const values = [];
+                const children = $(itemChange).children();
+
+                for (let j = 0; j < children.length; j++) {
+                    let text = $(children[j]).text();
+                    await toNum(text).then((res) => {
+                        if (res !== null) {
+                            values.push(res);
+                        }
+                    });
+                }
+                changeList.push({ values });
+            }
+        }
+
+        if (changeList.length === 0) {
+            if (champ)
+                changeList.push({ change: 'Added' });
+            else
+                continue;
+        }
+
+        results.push({ champ, changeList });
+    }
+    return { patch: patchId, changes: results };
+}
+
+// Scrape patches 12.1 through 26.13
+scrapeRange(12, 1, 26, 13).catch(console.error);

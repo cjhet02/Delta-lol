@@ -26,9 +26,13 @@ async function main() {
 
     const allData = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
     const patches = Object.keys(allData).sort((a, b) => {
-        const [as, ap] = a.split('.').map(Number);
-        const [bs, bp] = b.split('.').map(Number);
-        return as !== bs ? as - bs : ap - bp;
+        const toNums = s => s.split('.').map(p => p.startsWith('S') ? 3 + parseInt(p.slice(1)) * 0.01 : parseInt(p));
+        const pa = toNums(a), pb = toNums(b);
+        for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+            const d = (pa[i] || 0) - (pb[i] || 0);
+            if (d !== 0) return d;
+        }
+        return 0;
     });
 
     console.log(`Importing ${patches.length} patches from ${DATA_FILE}\n`);

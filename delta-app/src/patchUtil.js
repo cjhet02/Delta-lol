@@ -92,27 +92,66 @@ function toTitleCase(str) {
 function getPatchLabels(sSeason, sPatch, eSeason, ePatch) {
     const labels = [];
     let s = sSeason, p = sPatch;
-    while (s !== eSeason || p <= ePatch) {
-        if (s === 13 && p === 2) p = 3;
-        else if (s === 10 && p === 17) p = '16b';
-        else if (s === 12 && p === 24) { s++; p = 1; }
+    let sub = null; // null = normal, 's1' = season sub-division
 
-        labels.push({ label: `${s}-${p}`, display: `${s}.${p}` });
+    while (s < eSeason || (s === eSeason && p <= ePatch && !sub)) {
+        // Apply known patch substitutions
+        let label;
+        if (s === 13 && p === 2) {
+            label = `${s}-1b`;
+        } else if (s === 10 && p === 17) {
+            label = `${s}-16b`;
+        } else if (s === 25 && sub) {
+            label = `25-${sub}-${p}`;
+        } else {
+            label = `${s}-${p}`;
+        }
 
-        if (p === 24) { p = 1; s++; }
-        else if (p === '1b') p = 3;
-        else if (p === '16b') p = 18;
-        else p++;
+        // Display format
+        let display;
+        if (s === 25 && sub) {
+            display = `25.S1.${p}`;
+        } else {
+            display = `${s}.${p}`;
+        }
+
+        labels.push({ label, display });
+
+        // Advance to next patch
+        if (s === 25 && sub === null && p === 1) {
+            // After 25-1, start S1 sub-division
+            sub = 's1';
+            p = 1;
+        } else if (s === 25 && sub === 's1' && p === 3) {
+            // After 25-S1-3, go to patch 4 (no sub-division)
+            sub = null;
+            p = 4;
+        } else if (p === 24) {
+            s++;
+            // Seasons 15-24 don't exist, skip to 25
+            if (s >= 15 && s <= 24) s = 25;
+            p = 1;
+            sub = null;
+        } else if (p === '1b') {
+            p = 3;
+        } else if (p === '16b') {
+            p = 18;
+        } else {
+            p++;
+        }
     }
     return labels;
 }
 
-export async function champDelta(sSeason, sPatch, eSeason, ePatch, champ) {
+export async function champDelta(sSeason, sPatch, eSeason, ePatch, sSub, eSub, champ) {
     champ = toTitleCase(champ);
     const labels = getPatchLabels(sSeason, sPatch, eSeason, ePatch);
 
-    const results = await Promise.all(labels.map(l => getPatch(l.label).catch(() => ({}))));
-    const patches = labels.map((l, i) => ({ ...l, data: results[i] }));
+    // Filter labels to only include patches within the specified range
+    const filteredLabels = filterPatchLabels(labels, sSeason, sPatch, sSub, eSeason, ePatch, eSub);
+
+    const results = await Promise.all(filteredLabels.map(l => getPatch(l.label).catch(() => ({}))));
+    const patches = filteredLabels.map((l, i) => ({ ...l, data: results[i] }));
 
     let delta = {};
     for (const p of patches) {
@@ -125,4 +164,30 @@ export async function champDelta(sSeason, sPatch, eSeason, ePatch, champ) {
         }
     }
     return delta;
+}
+
+function filterPatchLabels(labels, sSeason, sPatch, sSub, eSeason, ePatch, eSub) {
+    return labels.filter(l => {
+        // Parse the label to compare
+        const parts = l.label.split('-');
+        const season = parseInt(parts[0]);
+        let patch, sub = null;
+
+        if (parts[1] === 's1') {
+            sub = 's1';
+            patch = parseInt(parts[2]);
+        } else {
+            patch = parseInt(parts[1]);
+        }
+
+        // Check if this label is >= start
+        const afterStart = season > sSeason ||
+            (season === sSeason && (sub > sSub || (sub === sSub && patch >= sPatch)));
+
+        // Check if this label is <= end
+        const beforeEnd = season < eSeason ||
+            (season === eSeason && (sub < eSub || (sub === eSub && patch <= ePatch)));
+
+        return afterStart && beforeEnd;
+    });
 }

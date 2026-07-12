@@ -115,6 +115,15 @@ app.post("/stats", async (req, res) => {
     }
 });
 
+app.delete("/stats/:patch", async (req, res) => {
+    try {
+        await Stats.deleteOne({ patch: req.params.patch });
+        res.send({ deleted: req.params.patch });
+    } catch (err) {
+        res.send(`Error: ${err}`);
+    }
+});
+
 app.listen(3002);
 // //get user via filters in query string params
 // app.get("/user", async (req, res) => {
