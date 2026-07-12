@@ -13,6 +13,8 @@ import os
 import sys
 import urllib.request
 
+from champ_names import normalize_name
+
 PARQUET_URL = "https://huggingface.co/datasets/HakimT/lol-champion-ranked-stats/resolve/main/data/train-00000-of-00001.parquet"
 LOCAL_CACHE = "/tmp/lol_stats.parquet"
 
@@ -71,7 +73,7 @@ def convert(args):
         champs = []
         for _, row in group.iterrows():
             champs.append({
-                "Name": row["champion"].title(),
+                "Name": normalize_name(row["champion"]),
                 "Class": "NA",
                 "Role": row["role"],
                 "Tier": "",

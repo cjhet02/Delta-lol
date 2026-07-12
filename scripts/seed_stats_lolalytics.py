@@ -12,9 +12,9 @@ import sys
 import time
 import urllib.request
 
+from champ_names import get_ddragon_id_map, get_display_name
+
 TIER_URL = "https://a1.lolalytics.com/mega/?ep=tier&v=1&patch={patch}&lane={lane}&tier=emerald_plus&queue=ranked&region=all"
-DDRAGON_VERSIONS_URL = "https://ddragon.leagueoflegends.com/api/versions.json"
-DDRAGON_CHAMP_URL = "https://ddragon.leagueoflegends.com/cdn/{version}/data/en_US/champion.json"
 
 LANES = ["top", "jungle", "middle", "bottom", "support"]
 LANE_TO_ROLE = {"top": "Top", "jungle": "Jungle", "middle": "Mid", "bottom": "ADC", "support": "Support"}
@@ -35,29 +35,6 @@ def fetch_json(url):
     req = urllib.request.Request(url, headers={"User-Agent": "DeltaLoL/1.0"})
     with urllib.request.urlopen(req, timeout=15) as resp:
         return json.loads(resp.read().decode("utf-8"))
-
-
-def build_champ_id_map():
-    """Fetch Data Dragon champion.json and build numeric ID → name map."""
-    versions = fetch_json(DDRAGON_VERSIONS_URL)
-    latest = versions[0]
-    print(f"  Data Dragon version: {latest}")
-    url = DDRAGON_CHAMP_URL.format(version=latest)
-    data = fetch_json(url)
-    mapping = {}
-    for name, info in data["data"].items():
-        mapping[info["key"]] = name
-    return mapping
-
-
-def champ_name_to_db(ddragon_name):
-    """Convert Data Dragon name to match our DB format.
-
-    Examples: AurelionSol -> Aurelionsol, KogMaw -> Kogmaw, RekSai -> RekSai
-    We title-case the full string then lowercase everything after the first char,
-    which matches the HuggingFace dataset's .title() convention.
-    """
-    return ddragon_name.title()
 
 
 def fetch_lane_stats(patch, lane):
@@ -99,7 +76,7 @@ def convert(patch, id_map):
                 print(f"  WARNING: unknown champion ID {cid} in {patch}/{lane}, skipping")
                 continue
 
-            name = champ_name_to_db(ddragon_name)
+            name = get_display_name(ddragon_name)
             key = (name, role)
             if key in seen:
                 continue
@@ -131,7 +108,7 @@ def main():
     args = parser.parse_args()
 
     print("Fetching champion ID mapping from Data Dragon...")
-    id_map = build_champ_id_map()
+    id_map = get_ddragon_id_map()
     print(f"  Mapped {len(id_map)} champions")
 
     patches = [args.patch] if args.patch else SEASON26_PATCHES

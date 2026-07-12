@@ -102,6 +102,44 @@ input {
   text-align: center; 
 }
 
+.MuiAutocomplete-listbox {
+  background-color: #333840;
+  color: #f0f0f0;
+}
+
+.MuiAutocomplete-option:hover {
+  background-color: #187685;
+}
+
+.MuiAutocomplete-option[data-focus="true"] {
+  background-color: #187685;
+}
+
+.thin-input {
+  height: 38px !important;
+  min-height: 38px !important;
+  padding: 0 12px !important;
+  box-sizing: border-box !important;
+  line-height: normal !important;
+  white-space: normal !important;
+}
+
+.btn, .form-control, .dropdown-toggle {
+  border-radius: 0.12rem !important;
+}
+
+.btn {
+  transition: filter 0.15s ease, transform 0.1s ease !important;
+}
+
+.btn:hover {
+  filter: brightness(1.2) !important;
+}
+
+.btn:active {
+  transform: scale(0.97) !important;
+}
+
 .FloatingLabel {
   color: #323438b2; /* Adjust the color as needed */
 }
@@ -118,4 +156,36 @@ input {
 /* Override the hover color */
 .ant-table-thead th.ant-table-column-sort:hover {
   background-color: #bae7ff; /* Change this to the desired hover color */
+}
+
+/* Collapse panel dark theme */
+.ant-collapse {
+  background-color: transparent !important;
+  border-color: #444 !important;
+  border-radius: 0.12rem !important;
+}
+
+.ant-collapse > .ant-collapse-item {
+  border-color: #444 !important;
+}
+
+.ant-collapse-header {
+  color: #f0f0f0 !important;
+  background-color: #2d3139 !important;
+}
+
+.ant-collapse-content {
+  background-color: transparent !important;
+}
+
+.ant-collapse .ant-collapse-item:hover > .ant-collapse-header {
+  background-color: #333840 !important;
+}
+
+.ant-collapse .ant-collapse-item-active > .ant-collapse-header {
+  background-color: #2d3139 !important;
+}
+
+.ant-collapse .ant-collapse-arrow {
+  color: #f0f0f0 !important;
 }

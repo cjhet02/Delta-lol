@@ -37,7 +37,7 @@ function getCellStyle(value) {
   return style;
 }
 
-const TableComponent = ({ data }) => {
+const TableComponent = ({ data, champion }) => {
   const [orderBy, setOrderBy] = useState('');
   const [order, setOrder] = useState('asc');
 
@@ -52,8 +52,9 @@ const TableComponent = ({ data }) => {
   }, [orderBy]);
 
   const sortedData = useMemo(() => {
-    if (!orderBy) return data;
-    return [...data].sort((a, b) => {
+    const filtered = champion ? data.filter(row => row.Name !== champion) : data;
+    if (!orderBy) return filtered;
+    return [...filtered].sort((a, b) => {
       const aValue = parseFloat(a[orderBy]);
       const bValue = parseFloat(b[orderBy]);
       if (order === 'asc') {
@@ -65,7 +66,7 @@ const TableComponent = ({ data }) => {
   }, [data, orderBy, order]);
 
   return (
-    <TableContainer component={Paper} style={{width: '950px', margin: 'auto', background: 'transparent'}}>
+    <TableContainer component={Paper} style={{maxWidth: '950px', margin: 'auto', backgroundColor: '#2d3139', overflowX: 'auto', border: '1px solid #444'}}>
       <Table>
         <TableHead>
           <TableRow>
@@ -83,6 +84,15 @@ const TableComponent = ({ data }) => {
           </TableRow>
         </TableHead>
         <TableBody>
+          {champion && data.filter(r => r.Name?.toLowerCase() === champion.toLowerCase()).map((row, i) => (
+            <TableRow key={`pinned-${i}`} style={{ backgroundColor: '#18768526' }}>
+              {columns.map((column) => (
+                <TableCell key={column.dataIndex} style={getCellStyle(row[column.dataIndex])}>
+                  {row[column.dataIndex]}
+                </TableCell>
+              ))}
+            </TableRow>
+          ))}
           {sortedData.map((row, index) => (
             <TableRow key={index}>
               {columns.map((column) => (
