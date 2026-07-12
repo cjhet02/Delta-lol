@@ -5,7 +5,7 @@ import { getChampStats } from './parse.js';
 import { Chart } from "react-google-charts";
 import React, { useState } from 'react';
 import { Dropdown, ButtonGroup, FloatingLabel, Form, Button, TabPane } from 'react-bootstrap';
-import { Slider, Carousel, Tabs } from 'antd';
+import { Slider, Carousel, Tabs, ConfigProvider } from 'antd';
 import StatsTable from './table.js';
 
 function App() {
@@ -216,6 +216,7 @@ function App() {
   };
 
   return (
+    <ConfigProvider theme={{ token: { colorPrimary: '#187685' } }}>
     <div className="App">
       <img src={logo} alt="logo" style={{ margin: '-50px' }}/>
       <h1>Delta LoL</h1>
@@ -225,7 +226,7 @@ function App() {
             <Form.Control type='text' placeholder='Lebron James' value={champ} onChange={e => setChamp(e.target.value)} style={{ label: 'Champion', width: '150px', height: '38px' }}/>
           
           <Dropdown as={ButtonGroup}>
-            <Dropdown.Toggle id="dropdown-basic" style={{ height: '38px', minWidth: '150px' }}>
+            <Dropdown.Toggle id="dropdown-basic" style={{ height: '38px', minWidth: '150px', backgroundColor: '#187685', borderColor: '#187685' }}>
               {role ? role : 'Select Role'}
             </Dropdown.Toggle>
 
@@ -245,7 +246,7 @@ function App() {
             tooltip={{ formatter }} onChange={sliderChange}
             marks={marks} included={true}/>
         </div>
-        <Button type='submit' onClick={handleDelta} style={{ width: '320px' }}>Get Delta</Button>
+        <Button type='submit' onClick={handleDelta} style={{ width: '320px', backgroundColor: '#187685', borderColor: '#187685' }}>Get Delta</Button>
       </Form.Group>
       {role !== "" && <Graphs/>}
       <div>
@@ -261,6 +262,7 @@ function App() {
         </Tabs>
       </div>
     </div>
+    </ConfigProvider>
   );
 }
 
