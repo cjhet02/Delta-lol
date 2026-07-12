@@ -15,7 +15,7 @@ const allColumns = [
   { title: 'KDA', dataIndex: 'KDA' }
 ];
 
-const TEXT_FIELDS = new Set(['Name', 'Role', 'Tier']);
+const TEXT_FIELDS = new Set(['Name', 'Role']);
 
 function filterColumns(data) {
   return allColumns.filter(col => {

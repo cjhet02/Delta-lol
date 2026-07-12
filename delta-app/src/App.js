@@ -30,6 +30,7 @@ function App() {
     vAxis: { minValue: 0, textStyle: { color: '#f0f0f0' } },
     chartArea: { width: "50%", height: "70%" },
     backgroundColor: '#282c34',
+    colors: ['#00E5FF', '#EA4335'],
   };
 
   function RenderChart({ data }) {
@@ -133,14 +134,19 @@ function App() {
             <h4>{value.feature}</h4>
             <div>
               {value.before.join(', ')} ⇒ {value.after.join(', ')}<br />
-              <strong>Delta:</strong> {value.delta.map((delta, index) => (
+              <strong>Delta:</strong> {value.delta.map((delta, index) => {
+                const isCooldown = /cooldown/i.test(value.feature);
+                const positiveClass = isCooldown ? 'negative' : 'positive';
+                const negativeClass = isCooldown ? 'positive' : 'negative';
+                return (
                 <React.Fragment key={index}>
-                  <span className={delta >= 0 ? ((delta === '0' || delta === 'change') ? 'neutral' : 'positive') : (delta === 'new' ? 'positive' : 'negative')}>
+                  <span className={delta >= 0 ? ((delta === '0' || delta === 'change') ? 'neutral' : positiveClass) : (delta === 'new' ? positiveClass : negativeClass)}>
                     {(isNaN(delta) || Number.isInteger(parseFloat(delta)) ? delta : parseFloat(delta).toFixed(3))}
                   </span>
                   {index !== value.delta.length - 1 && ', '}
                 </React.Fragment>
-              ))}
+                );
+              })}
             </div>
           </div>
         ))}

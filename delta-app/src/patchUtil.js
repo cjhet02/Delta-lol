@@ -26,6 +26,7 @@ async function getPatch(patch) {
 function buildChangeMap(changeList) {
     const map = new Map();
     for (let i = 0; i < changeList.length; i++) {
+        if (!changeList[i].change) continue;
         const key = changeList[i].change.split(' ')[0];
         map.set(key, { index: i, entry: changeList[i] });
     }
@@ -50,6 +51,7 @@ async function getDelta(p1, p2) {
     const p1ChangeMap = buildChangeMap(p1.changeList);
 
     for (let i = 0; i < p2.changeList.length; i++) {
+        if (!p2.changeList[i].change) continue;
         const changeKey = p2.changeList[i].change.split(' ')[0];
         const match = p1ChangeMap.get(changeKey);
 
