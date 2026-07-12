@@ -6,7 +6,7 @@ import { Chart } from "react-google-charts";
 import React, { useState } from 'react';
 import { Dropdown, ButtonGroup, FloatingLabel, Form, Button, TabPane, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { Slider, Carousel, Tabs, ConfigProvider, Collapse } from 'antd';
-import StatsTable from './table.js';
+import StatsTable from './table.jsx';
 import { useEffect } from 'react';
 import { Autocomplete, TextField } from '@mui/material';
 
