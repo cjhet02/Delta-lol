@@ -382,7 +382,7 @@ function App() {
             </Dropdown.Menu>
           </Dropdown>
         </div>
-        <div style={{ maxWidth: '500px', width: '100%', margin: 'auto', }}>
+        <div style={{ maxWidth: '500px', width: '100%', margin: 'auto', padding: '0 16px' }}>
           <Slider range={{ draggableTrack: true }}
             defaultValue={[0, 110]} min={0} max={110}
             tooltip={{ formatter }} onChange={sliderChange}
