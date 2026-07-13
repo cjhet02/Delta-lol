@@ -10,13 +10,9 @@ async function getPatch(patch) {
         headers: {
             "Content-Type": "application/json",
         },
-    }).catch((err) => {
-        console.log(`error on patch ${patch} ${err}`);
-        return null;
     });
-    if (!data) {
-        patchCache.set(patch, {});
-        return {};
+    if (!data.ok) {
+        throw new Error(`Patch request failed (${data.status})`);
     }
     const json = await data.json();
     patchCache.set(patch, json);

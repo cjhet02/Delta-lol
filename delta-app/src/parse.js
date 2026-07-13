@@ -10,13 +10,9 @@ async function getStats(patch) {
         headers: {
             "Content-Type": "application/json",
         },
-    }).catch((err) => {
-        console.log(`error on patch ${patch} ${err.response.status}`);
-        throw err;
-    })
-    if(!data) {
-        statsCache.set(patch, {});
-        return {};
+    });
+    if (!data.ok) {
+        throw new Error(`Stats request failed (${data.status})`);
     }
     const json = await data.json();
     statsCache.set(patch, json);

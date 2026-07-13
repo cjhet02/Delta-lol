@@ -22,6 +22,8 @@ function App() {
   const [table, setTable] = useState(null);
   const [hasSearched, setHasSearched] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [retrying, setRetrying] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   useEffect(() => {
@@ -46,11 +48,16 @@ function App() {
   // Fetch champion list on component mount
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL || ''}/stats?patch=26.13`)
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) throw new Error(`Status ${response.status}`);
+        return response.json();
+      })
       .then(data => {
         const names = [...new Set(data.champs.map(champ => champ.Name))].sort();
         setChampList(names);
-      }).catch(() => {});
+      }).catch(() => {
+        setError('Could not load champion list. The server may be starting up — try refreshing in a moment.');
+      });
     }, []);
 
   // Reset stats and hasSearched when champ, role, start, or end changes
@@ -222,10 +229,17 @@ function App() {
     )
   };
   
-  const handleDelta = async () => {
-    setStats(null);
-    setHasSearched(false);
+  const MAX_RETRIES = 2;
+  const RETRY_DELAY = 3000;
+
+  const handleDelta = async (isRetry = false) => {
+    if (!isRetry) {
+      setStats(null);
+      setHasSearched(false);
+      setError(null);
+    }
     setLoading(true);
+    setRetrying(isRetry);
 
     const sSplit = start.split('.');
     const eSplit = end.split('.');
@@ -249,21 +263,63 @@ function App() {
         ePatchNum = parseInt(eSplit[1]);
     }
 
-    const [changes, statData] = await Promise.all([
-      patchUtil.champDelta(sSeason, sPatchNum, eSeason, ePatchNum, sSub, eSub, champ),
-      getChampStats(champ, role, sSeason, sPatchNum, eSeason, ePatchNum, sSub, eSub)
-    ]);
+    try {
+      const [changes, statData] = await Promise.all([
+        patchUtil.champDelta(sSeason, sPatchNum, eSeason, ePatchNum, sSub, eSub, champ),
+        getChampStats(champ, role, sSeason, sPatchNum, eSeason, ePatchNum, sSub, eSub)
+      ]);
 
-    setDelta(changes);
-    if (statData.matrix && statData.matrix.length > 1) {
-      setStats(statData.matrix);
+      setDelta(changes);
+      if (statData.matrix && statData.matrix.length > 1) {
+        setStats(statData.matrix);
+      }
+      if (statData.ticks) {
+        setTicks(statData.ticks);
+      }
+      setTable(statData.delta);
+      setHasSearched(true);
+      setError(null);
+    } catch (err) {
+      console.error('Delta request failed:', err);
+      const isNetworkError = err instanceof TypeError && err.message === 'Failed to fetch';
+      const isServerError = err.message?.includes('failed');
+
+      if (isNetworkError || isServerError) {
+        // Backend likely sleeping — auto-retry
+        for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+          setRetrying(true);
+          setError(`Server is waking up... (attempt ${attempt}/${MAX_RETRIES})`);
+          await new Promise(r => setTimeout(r, RETRY_DELAY));
+          try {
+            const [changes, statData] = await Promise.all([
+              patchUtil.champDelta(sSeason, sPatchNum, eSeason, ePatchNum, sSub, eSub, champ),
+              getChampStats(champ, role, sSeason, sPatchNum, eSeason, ePatchNum, sSub, eSub)
+            ]);
+            setDelta(changes);
+            if (statData.matrix && statData.matrix.length > 1) {
+              setStats(statData.matrix);
+            }
+            if (statData.ticks) {
+              setTicks(statData.ticks);
+            }
+            setTable(statData.delta);
+            setHasSearched(true);
+            setError(null);
+            setRetrying(false);
+            return;
+          } catch (retryErr) {
+            console.error(`Retry ${attempt} failed:`, retryErr);
+          }
+        }
+        // All retries exhausted
+        setError('Could not connect to the server. It may take ~30 seconds to start. Please try again.');
+      } else {
+        setError('Something went wrong. Please try again.');
+      }
+      setRetrying(false);
+    } finally {
+      setLoading(false);
     }
-    if (statData.ticks) {
-      setTicks(statData.ticks);
-    }
-    setTable(statData.delta);
-    setLoading(false);
-    setHasSearched(true);
   };
 
   const handleRoleSelect = (role) => {
@@ -334,6 +390,28 @@ function App() {
         </div>
         <Button type='submit' onClick={handleDelta} disabled={loading} style={{ width: '320px', backgroundColor: '#187685', borderColor: '#187685' }}>{loading ? 'Loading...' : 'Get Delta'}</Button>
       </Form.Group>
+      {error && (
+        <div style={{
+          maxWidth: '500px', margin: '10px auto', padding: '10px 16px',
+          borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          backgroundColor: retrying ? '#2d313a' : '#3d2121',
+          border: `1px solid ${retrying ? '#187685' : '#a33'}`,
+          color: '#f0f0f0', fontSize: '0.9rem',
+        }}>
+          <span>{error}</span>
+          {!retrying && (
+            <button
+              onClick={() => { setError(null); handleDelta(); }}
+              style={{
+                marginLeft: '12px', padding: '4px 12px', borderRadius: '4px', border: 'none',
+                backgroundColor: '#187685', color: '#f0f0f0', cursor: 'pointer', whiteSpace: 'nowrap',
+              }}
+            >
+              Retry
+            </button>
+          )}
+        </div>
+      )}
       <Collapse defaultActiveKey={['graphs']} style={{ maxWidth: '950px', margin: 'auto', marginTop: '20px' }}>
         <Collapse.Panel header="Graphs" key="graphs">
           <Graphs/>
