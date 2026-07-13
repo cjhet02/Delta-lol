@@ -124,7 +124,8 @@ app.delete("/stats/:patch", async (req, res) => {
     }
 });
 
-app.listen(3002);
+const PORT = process.env.PORT || 3002;
+app.listen(PORT);
 // //get user via filters in query string params
 // app.get("/user", async (req, res) => {
 //     try {
