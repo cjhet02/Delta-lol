@@ -382,13 +382,13 @@ function App() {
             </Dropdown.Menu>
           </Dropdown>
         </div>
-        <div style={{ width: '500px', margin: 'auto', }}>
+        <div style={{ maxWidth: '500px', width: '100%', margin: 'auto', }}>
           <Slider range={{ draggableTrack: true }}
             defaultValue={[0, 110]} min={0} max={110}
             tooltip={{ formatter }} onChange={sliderChange}
             marks={marks} included={true}/>
         </div>
-        <Button type='submit' onClick={handleDelta} disabled={loading} style={{ width: '320px', backgroundColor: '#187685', borderColor: '#187685' }}>{loading ? 'Loading...' : 'Get Delta'}</Button>
+        <Button type='submit' onClick={handleDelta} disabled={loading} style={{ maxWidth: '320px', width: '100%', backgroundColor: '#187685', borderColor: '#187685' }}>{loading ? 'Loading...' : 'Get Delta'}</Button>
       </Form.Group>
       {error && (
         <div style={{
