@@ -4,7 +4,7 @@ async function getStats(patch) {
     const cached = statsCache.get(patch);
     if (cached !== undefined) return cached;
 
-    const url = `http://localhost:3002/stats?patch=${patch}`;
+    const url = `${import.meta.env.VITE_API_URL || ''}/stats?patch=${patch}`;
     const data = await fetch(url, {
         method: "GET",
         headers: {

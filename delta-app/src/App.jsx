@@ -45,7 +45,7 @@ function App() {
 
   // Fetch champion list on component mount
   useEffect(() => {
-    fetch('http://localhost:3002/stats?patch=26.13')
+    fetch(`${import.meta.env.VITE_API_URL || ''}/stats?patch=26.13`)
       .then(response => response.json())
       .then(data => {
         const names = [...new Set(data.champs.map(champ => champ.Name))].sort();

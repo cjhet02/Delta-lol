@@ -4,7 +4,7 @@ async function getPatch(patch) {
     const cached = patchCache.get(patch);
     if (cached !== undefined) return cached;
 
-    const url = `http://localhost:3002/patch?patch=${patch}`;
+    const url = `${import.meta.env.VITE_API_URL || ''}/patch?patch=${patch}`;
     const data = await fetch(url, {
         method: "GET",
         headers: {
